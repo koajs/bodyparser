@@ -23,15 +23,14 @@ var parse = require('co-body');
  *   - {string} encoding default 'utf-8'
  */
 module.exports = function (app, opts) {
-  app.request.__defineGetter__('bodyParser', function () {
-    var ctx = this.ctx;
-    var request = this.ctx.request;
-
+  app.context.__defineGetter__('bodyParser', function () {
+    var ctx = this;
+    var request = this.request;
     if (request.body !== undefined) {
       return request.body;
     }
 
-    return co(function *() {
+    return co(function *(customOpts) {
       if (ctx.is('application/json')) {
         return request.body = yield parse.json(ctx, opts);
       } else if (ctx.is('application/x-www-form-urlencoded')) {
@@ -40,6 +39,10 @@ module.exports = function (app, opts) {
         return request.body = null;
       }
     });
+  });
+
+  app.request.__defineGetter__('bodyParser', function () {
+    return this.ctx.bodyParser;
   });
 };
 

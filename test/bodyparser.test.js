@@ -9,7 +9,7 @@ describe('test/bodyparser.test.js', function () {
 
     it('should parse json body ok', function (done) {
       app.use(function *() {
-        var body = yield this.request.bodyParser;
+        var body = yield this.bodyParser;
         body.should.eql({ foo: 'bar' });
         this.request.body.should.eql( {foo: 'bar'} );
         this.body = this.request.body;
@@ -44,7 +44,7 @@ describe('test/bodyparser.test.js', function () {
 
     it('should get body null', function (done) {
       app.use(function *() {
-        var body = yield this.request.bodyParser;
+        var body = yield this.bodyParser;
         should.not.exist(body);
         should.not.exist(this.request.body);
         done();
