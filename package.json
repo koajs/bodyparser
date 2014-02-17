@@ -1,5 +1,5 @@
 {
-  "name": "koa-body-parser",
+  "name": "koa-bodyparser",
   "version": "0.0.1",
   "description": "a body parser for koa",
   "main": "index.js",

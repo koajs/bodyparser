@@ -53,6 +53,6 @@ describe('test/bodyparser.test.js', function () {
 function App() {
   var app = koa();
   app.keys = ['a', 'b'];
-  app.use(bodyParser.middleware());
+  app.use(bodyParser());
   return app;
 }

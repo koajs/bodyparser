@@ -23,6 +23,10 @@ var parse = require('co-body');
  *   - {string} encoding default 'utf-8'
  */
 module.exports = function (app, opts) {
+  if (!app || !app.context) {
+    return middleware(app);
+  }
+
   app.context.__defineGetter__('bodyParser', function () {
     var ctx = this;
     var request = this.request;
@@ -46,7 +50,7 @@ module.exports = function (app, opts) {
   });
 };
 
-module.exports.middleware = function (opts) {
+function middleware(opts) {
   return function *bodyParser(next) {
     if (this.request.body !== undefined) {
       return yield next;
@@ -61,4 +65,4 @@ module.exports.middleware = function (opts) {
     }
     yield next;
   };
-};
+}

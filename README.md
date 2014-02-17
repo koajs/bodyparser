@@ -5,7 +5,7 @@ a body parser for koa, base on [co-body](https://github.com/visionmedia/co-body)
 
 ## Install
 
-[![NPM](https://nodei.co/npm/koa-body-parser.png?downloads=true)](https://nodei.co/npm/koa-body-parser/)
+[![NPM](https://nodei.co/npm/koa-bodyparser.png?downloads=true)](https://nodei.co/npm/koa-bodyparser/)
 
 ## Usage
 
@@ -15,7 +15,7 @@ You can use `koa-body-parser` in two ways.
 
 ```js
 var koa = require('koa');
-var bodyParser = require('koa-body-parser');
+var bodyParser = require('koa-bodyparser');
 
 var app = koa();
 bodyParser(app, { limit: '1mb' });
@@ -33,10 +33,10 @@ app.use(function *() {
 
 ```js
 var koa = require('koa');
-var bodyParser = require('koa-body-parser');
+var bodyParser = require('koa-bodyparser');
 
 var app = koa();
-koa.use(bodyParser.middleware({ limit: '512kb' }));
+koa.use(bodyParser({ limit: '512kb' }));
 
 app.use(function *() {
   // the parsed body will store in this.request.body
