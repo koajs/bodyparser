@@ -1,6 +1,6 @@
 {
   "name": "koa-body-parser",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "a body parser for koa",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "type": "git",
     "url": "git://github.com/dead-horse/koa-body-parser.git"
   },
+  "files": ["index.js"],
   "keywords": [
     "bodyParser",
     "json",
