@@ -48,6 +48,7 @@ app.use(function *() {
 
 * **limit**: The byte limit of the body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `1mb` in json type and `56kb` in urlencoded type by `co-body`
 * **encode**: The requested encoding. Default is `utf-8` by `co-body`
+* [**jsonLimit**]: The byte limit of the body, default is equal to `limit`. To separate json body and urlencoded body use same `limit` argument.
 
 ## Licences
 (The MIT License)

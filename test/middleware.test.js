@@ -1,7 +1,28 @@
-var request = require('supertest')
-var koa = require('koa')
-var bodyParser = require('../');
+/**!
+ * koa-body-parser - test/middleware.test.js
+ *
+ * Copyright(c) 2014
+ * MIT Licensed
+ *
+ * Authors:
+ *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
+ *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
+ */
+
+"use strict";
+
+/**
+ * Module dependencies.
+ */
+
+var fs = require('fs');
+var path = require('path');
+var request = require('supertest');
+var koa = require('koa');
 var should = require('should');
+var bodyParser = require('../');
+
+var fixtures = path.join(__dirname, 'fixtures');
 
 describe('test/bodyparser.test.js', function () {
   describe('json body', function () {
@@ -16,6 +37,17 @@ describe('test/bodyparser.test.js', function () {
       .post('/')
       .send({ foo: 'bar' })
       .expect({ foo: 'bar' }, done);
+    });
+
+    it('should json body reach the limit size', function (done) {
+      var app = App({jsonLimit: 100})
+      app.use(function *() {
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .send(require(path.join(fixtures, 'raw.json')))
+      .expect(413, done);
     });
   });
 
@@ -50,9 +82,10 @@ describe('test/bodyparser.test.js', function () {
   });
 })
 
-function App() {
+function App(options) {
   var app = koa();
+  // app.outputErrors = true;
   app.keys = ['a', 'b'];
-  app.use(bodyParser());
+  app.use(bodyParser(options));
   return app;
 }
