@@ -24,11 +24,14 @@ var bodyParser = require('../');
 
 var fixtures = path.join(__dirname, 'fixtures');
 
-describe('test/bodyparser.test.js', function () {
+describe('test/middleware.test.js', function () {
   describe('json body', function () {
     var app = App();
 
     it('should parse json body ok', function (done) {
+      // should work when use body parser again
+      app.use(bodyParser());
+
       app.use(function *() {
         this.request.body.should.eql( {foo: 'bar'} );
         this.body = this.request.body;
