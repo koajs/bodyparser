@@ -2,3 +2,4 @@ test/
 .travis.yml
 Makefile
 .gitignore
+coverage/

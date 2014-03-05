@@ -5,6 +5,7 @@
  *
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
+ *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
  */
 
 'use strict';
@@ -13,7 +14,6 @@
  * Module dependencies.
  */
 
-var co = require('co');
 var parse = require('co-body');
 
 function jsonOptions(opts) {
@@ -28,6 +28,23 @@ function jsonOptions(opts) {
   return jsonOpts;
 }
 
+function *parseBody(ctx, formOpts, jsonOpts) {
+  var request = ctx.request;
+  if (request.body !== undefined) {
+    return request.body;
+  }
+
+  if (ctx.is('application/json')) {
+    request.body = yield parse.json(ctx, jsonOpts);
+  } else if (ctx.is('application/x-www-form-urlencoded')) {
+    request.body = yield parse.form(ctx, formOpts);
+  } else {
+    request.body = null;
+  }
+
+  return request.body;
+}
+
 /**
  * @param {Object} app koa app instance
  * @param [Object] opts
@@ -39,22 +56,8 @@ module.exports = function (app, opts) {
     return middleware(app);
   }
   var jsonOpts = jsonOptions(opts);
-  app.context.__defineGetter__('bodyParser', function () {
-    var ctx = this;
-    var request = this.request;
-    if (request.body !== undefined) {
-      return request.body;
-    }
-
-    return co(function *(customOpts) {
-      if (ctx.is('application/json')) {
-        return request.body = yield parse.json(ctx, jsonOpts);
-      } else if (ctx.is('application/x-www-form-urlencoded')) {
-        return request.body = yield parse.form(ctx, opts);
-      } else {
-        return request.body = null;
-      }
-    });
+  app.context.__defineGetter__('bodyParser', function *() {
+    return yield *parseBody(this, opts, jsonOpts);
   });
 
   app.request.__defineGetter__('bodyParser', function () {
@@ -66,16 +69,10 @@ function middleware(opts) {
   var jsonOpts = jsonOptions(opts);
   return function *bodyParser(next) {
     if (this.request.body !== undefined) {
-      return yield next;
+      return yield *next;
     }
 
-    if (this.is('application/json')) {
-      this.request.body = yield parse.json(this, jsonOpts);
-    } else if (this.is('application/x-www-form-urlencoded')) {
-      this.request.body = yield parse.form(this, opts);
-    } else {
-      this.request.body = null;
-    }
-    yield next;
+    yield *parseBody(this, opts, jsonOpts)
+    yield *next;
   };
 }
