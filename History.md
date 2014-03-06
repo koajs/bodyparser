@@ -1,4 +1,10 @@
 
+0.1.0 / 2014-03-06 
+==================
+
+  * Merge pull request #2 from fengmk2/remove-co
+  * Remove co deps and improve coverage to 100%
+
 0.0.2 / 2014-02-26
 ==================
 
