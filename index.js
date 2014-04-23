@@ -15,64 +15,47 @@
  */
 
 var parse = require('co-body');
+var copy = require('copy-to');
+
+/**
+ * @param [Object] opts
+ *   - {String} jsonLimit default '1mb'
+ *   - {String} formLimit default '56kb'
+ *   - {string} encoding default 'utf-8'
+ */
+
+module.exports = function (opts) {
+  opts = opts || {};
+  var jsonOpts = jsonOptions(opts);
+  var formOpts = formOptions(opts);
+
+  return function *bodyParser(next) {
+    if (this.request.body !== undefined) {
+      return yield* next;
+    }
+
+    if (this.is('json')) {
+      this.request.body = yield parse.json(this, jsonOpts);
+    } else if (this.is('urlencoded')) {
+      this.request.body = yield parse.form(this, formOpts);
+    } else {
+      this.request.body = null;
+    }
+
+    yield* next;
+  };
+};
 
 function jsonOptions(opts) {
-  if (!opts || !opts.jsonLimit) {
-    return opts;
-  }
   var jsonOpts = {};
-  for (var k in opts) {
-    jsonOpts[k] = opts[k];
-  }
-  jsonOpts.limit = jsonOpts.jsonLimit;
+  copy(opts).to(jsonOpts);
+  jsonOpts.limit = opts.jsonLimit;
   return jsonOpts;
 }
 
-function *parseBody(ctx, formOpts, jsonOpts) {
-  var request = ctx.request;
-  if (request.body !== undefined) {
-    return request.body;
-  }
-
-  if (ctx.is('application/json')) {
-    request.body = yield parse.json(ctx, jsonOpts);
-  } else if (ctx.is('application/x-www-form-urlencoded')) {
-    request.body = yield parse.form(ctx, formOpts);
-  } else {
-    request.body = null;
-  }
-
-  return request.body;
-}
-
-/**
- * @param {Object} app koa app instance
- * @param [Object] opts
- *   - {String} limit default json encode limit is '1mb' and default urlencoded limit is '56kb'
- *   - {string} encoding default 'utf-8'
- */
-module.exports = function (app, opts) {
-  if (!app || !app.context) {
-    return middleware(app);
-  }
-  var jsonOpts = jsonOptions(opts);
-  app.context.__defineGetter__('bodyParser', function *() {
-    return yield *parseBody(this, opts, jsonOpts);
-  });
-
-  app.request.__defineGetter__('bodyParser', function () {
-    return this.ctx.bodyParser;
-  });
-};
-
-function middleware(opts) {
-  var jsonOpts = jsonOptions(opts);
-  return function *bodyParser(next) {
-    if (this.request.body !== undefined) {
-      return yield *next;
-    }
-
-    yield *parseBody(this, opts, jsonOpts)
-    yield *next;
-  };
+function formOptions(opts) {
+  var formOpts = {};
+  copy(opts).to(formOpts);
+  formOpts.limit = opts.urlencodedLimit;
+  return formOpts;
 }

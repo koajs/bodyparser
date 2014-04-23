@@ -10,7 +10,9 @@
     "type": "git",
     "url": "git://github.com/dead-horse/koa-body-parser.git"
   },
-  "files": ["index.js"],
+  "files": [
+    "index.js"
+  ],
   "keywords": [
     "bodyParser",
     "json",
@@ -25,15 +27,13 @@
   },
   "homepage": "https://github.com/dead-horse/koa-body-parser",
   "devDependencies": {
-    "autod": "~0.1.0",
-    "cov": "*",
-    "istanbul": "git://github.com/gotwarlost/istanbul.git#harmony",
-    "koa": "0.5.0",
+    "koa": "~0.5.0",
     "mocha": "~1.17.1",
-    "should": "3.1.3",
-    "supertest": "0.9.0"
+    "should": "~3.1.3",
+    "supertest": "~0.9.0"
   },
   "dependencies": {
-    "co-body": "0.0.1"
+    "co-body": ">=0.0.1",
+    "copy-to": ">=0.0.3"
   }
 }
