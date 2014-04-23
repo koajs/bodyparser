@@ -9,46 +9,24 @@ a body parser for koa, base on [co-body](https://github.com/visionmedia/co-body)
 
 ## Usage
 
-You can use `koa-body-parser` in two ways.
-
-* first
-
 ```js
 var koa = require('koa');
 var bodyParser = require('koa-bodyparser');
 
 var app = koa();
-bodyParser(app, { limit: '1mb' });
-
-app.use(function *() {
-  // Lazily parse when you need
-  var body = yield this.bodyParser;
-
-  // and the parsed body will store in `this.request.body`
-  // next time use this.bodyParser will return the cache
-});
-```
-
-* second
-
-```js
-var koa = require('koa');
-var bodyParser = require('koa-bodyparser');
-
-var app = koa();
-koa.use(bodyParser({ limit: '512kb' }));
+koa.use(bodyParser());
 
 app.use(function *() {
   // the parsed body will store in this.request.body
-  console.log(this.request.body);
+  this.body = this.request.body;
 });
 ```
 
 ## Options
 
-* **limit**: The byte limit of the body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `1mb` in json type and `56kb` in urlencoded type by `co-body`
-* **encode**: The requested encoding. Default is `utf-8` by `co-body`
-* [**jsonLimit**]: The byte limit of the body, default is equal to `limit`. To separate json body and urlencoded body use same `limit` argument.
+* **encode**: requested encoding. Default is `utf-8` by `co-body`
+* **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`
+* **jsonLimit**: limit of the `json` body. Default is `56kb`
 
 ## Licences
 (The MIT License)
