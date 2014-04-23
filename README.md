@@ -1,4 +1,4 @@
-koa-body-parser [![Build Status](https://secure.travis-ci.org/dead-horse/koa-body-parser.png)](http://travis-ci.org/dead-horse/koa-body-parser)
+koa-body-parser [![Build Status](https://secure.travis-ci.org/koajs/body-parser.png)](http://travis-ci.org/koajs/body-parser)
 ===============
 
 a body parser for koa, base on [co-body](https://github.com/visionmedia/co-body).
