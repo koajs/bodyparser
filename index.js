@@ -56,6 +56,6 @@ function jsonOptions(opts) {
 function formOptions(opts) {
   var formOpts = {};
   copy(opts).to(formOpts);
-  formOpts.limit = opts.urlencodedLimit;
+  formOpts.limit = opts.formLimit;
   return formOpts;
 }

@@ -43,7 +43,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body reach the limit size', function (done) {
-      var app = App({jsonLimit: 100})
+      var app = App({jsonLimit: 100});
       app.use(function *() {
         this.body = this.request.body;
       });
@@ -67,6 +67,15 @@ describe('test/middleware.test.js', function () {
       .type('form')
       .send({ foo: {bar: 'baz'} })
       .expect({ foo: {bar: 'baz'} }, done);
+    });
+
+    it('should parse form body reach the limit size', function (done) {
+      var app = App({formLimit: 10});
+      request(app.listen())
+      .post('/')
+      .type('form')
+      .send({foo: {bar: 'bazzzzzzz'}})
+      .expect(413, done);
     });
   });
 
