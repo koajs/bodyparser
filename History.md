@@ -1,4 +1,11 @@
 
+1.0.1 / 2014-04-23
+==================
+
+  * fix formLimit, add test case
+  * fix badge
+  * update repo
+
 1.0.0 / 2014-04-23
 ==================
 
