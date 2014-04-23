@@ -1,5 +1,11 @@
 
-0.1.0 / 2014-03-06 
+1.0.0 / 2014-04-23
+==================
+
+  * update readme
+  * refactor
+
+0.1.0 / 2014-03-06
 ==================
 
   * Merge pull request #2 from fengmk2/remove-co
