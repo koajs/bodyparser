@@ -26,7 +26,7 @@ app.use(function *() {
 
 * **encode**: requested encoding. Default is `utf-8` by `co-body`
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`
-* **jsonLimit**: limit of the `json` body. Default is `56kb`
+* **jsonLimit**: limit of the `json` body. Default is `1mb`
 
 ## Licences
 (The MIT License)
