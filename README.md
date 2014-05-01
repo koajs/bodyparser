@@ -14,7 +14,7 @@ var koa = require('koa');
 var bodyParser = require('koa-bodyparser');
 
 var app = koa();
-koa.use(bodyParser());
+app.use(bodyParser());
 
 app.use(function *() {
   // the parsed body will store in this.request.body
