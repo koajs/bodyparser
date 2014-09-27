@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/koajs/body-parser",
   "devDependencies": {
+    "istanbul-harmony": "~0.3.0",
     "koa": "~0.5.0",
     "mocha": "~1.17.1",
     "should": "~3.1.3",
