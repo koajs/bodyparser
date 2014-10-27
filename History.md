@@ -1,5 +1,10 @@
 
-1.0.1 / 2014-04-23
+n.n.n / 2014-10-28 
+==================
+
+  * Merge pull request #6 from tunnckoCore/master
+  * resolve https://github.com/tunnckoCore/koa-better-body/issues/3#issuecomment-60458238
+
 ==================
 
   * fix formLimit, add test case
