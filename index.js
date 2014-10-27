@@ -34,9 +34,9 @@ module.exports = function (opts) {
       return yield* next;
     }
 
-    if (this.is('json')) {
+    if (this.request.is('application/json', 'application/csp-report')) {
       this.request.body = yield parse.json(this, jsonOpts);
-    } else if (this.is('urlencoded')) {
+    } else if (this.request.is('application/x-www-form-urlencoded')) {
       this.request.body = yield parse.form(this, formOpts);
     } else {
       this.request.body = null;
