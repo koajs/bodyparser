@@ -40,7 +40,8 @@ autod:
 	@./node_modules/.bin/autod -w \
 		-e example.js \
 		-f "~" \
-		-k supertest
+		-k supertest \
+		-D mocha,should,istanbul-harmony
 	@$(MAKE) install
 
 .PHONY: test
