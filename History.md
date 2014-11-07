@@ -1,15 +1,17 @@
 
-n.n.n / 2014-10-28 
+1.2.0 / 2014-11-07
+==================
+
+  * add example.js
+  * bump dependencies
+  * Merge pull request #7 from rudijs/develop
+  * Add support for JSON-API
+
+1.1.0 / 2014-10-28
 ==================
 
   * Merge pull request #6 from tunnckoCore/master
   * resolve https://github.com/tunnckoCore/koa-better-body/issues/3#issuecomment-60458238
-
-==================
-
-  * fix formLimit, add test case
-  * fix badge
-  * update repo
 
 1.0.0 / 2014-04-23
 ==================
