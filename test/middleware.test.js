@@ -42,6 +42,22 @@ describe('test/middleware.test.js', function () {
       .expect({ foo: 'bar' }, done);
     });
 
+    it('should parse json body with json-api headers ok', function (done) {
+      // should work when use body parser again
+      app.use(bodyParser());
+
+      app.use(function *() {
+        this.request.body.should.eql( {foo: 'bar'} );
+        this.body = this.request.body;
+      });
+      request(app.listen())
+        .post('/')
+        .set('Accept', 'application/vnd.api+json')
+        .set('Content-type', 'application/vnd.api+json')
+        .send('{"foo": "bar"}')
+        .expect({ foo: 'bar' }, done);
+    });
+
     it('should json body reach the limit size', function (done) {
       var app = App({jsonLimit: 100});
       app.use(function *() {
