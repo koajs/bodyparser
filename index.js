@@ -34,7 +34,7 @@ module.exports = function (opts) {
       return yield* next;
     }
 
-    if (this.request.is('application/json', 'application/vnd.api+json', 'application/csp-report')) {
+    if (this.request.is('application/json', 'application/json-patch+json', 'application/vnd.api+json', 'application/csp-report')) {
       this.request.body = yield parse.json(this, jsonOpts);
     } else if (this.request.is('application/x-www-form-urlencoded')) {
       this.request.body = yield parse.form(this, formOpts);
