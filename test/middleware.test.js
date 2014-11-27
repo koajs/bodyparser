@@ -58,6 +58,19 @@ describe('test/middleware.test.js', function () {
         .expect({ foo: 'bar' }, done);
     });
 
+    it('should parse json patch', function (done) {
+      var app = App();
+      app.use(function *() {
+        this.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
+        this.body = this.request.body;
+      });
+      request(app.listen())
+        .patch('/')
+        .set('Content-type', 'application/json-patch+json')
+        .send('[{"op": "add", "path": "/foo", "value": "bar"}]')
+        .expect([{op: 'add', path: '/foo', value: 'bar'}], done);
+    });
+
     it('should json body reach the limit size', function (done) {
       var app = App({jsonLimit: 100});
       app.use(function *() {
