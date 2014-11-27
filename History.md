@@ -1,4 +1,11 @@
 
+1.3.0 / 2014-11-27 
+==================
+
+  * support extendTypes
+  * Merge pull request #8 from coderhaoxin/json-patch
+  * add support for json patch
+
 1.2.0 / 2014-11-07
 ==================
 
