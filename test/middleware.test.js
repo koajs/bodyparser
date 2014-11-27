@@ -108,6 +108,42 @@ describe('test/middleware.test.js', function () {
     });
   });
 
+  describe('extent type', function () {
+    it('should extent json ok', function (done) {
+      var app = App({
+        extendTypes: {
+          json: 'application/x-javascript'
+        }
+      });
+      app.use(function* () {
+        this.body = this.request.body;
+      });
+
+      request(app.listen())
+        .post('/')
+        .type('application/x-javascript')
+        .send(JSON.stringify({ foo: 'bar' }))
+        .expect({ foo: 'bar' }, done);
+    });
+
+    it('should extent json with array ok', function (done) {
+      var app = App({
+        extendTypes: {
+          json: ['application/x-javascript', 'application/y-javascript']
+        }
+      });
+      app.use(function* () {
+        this.body = this.request.body;
+      });
+
+      request(app.listen())
+        .post('/')
+        .type('application/x-javascript')
+        .send(JSON.stringify({ foo: 'bar' }))
+        .expect({ foo: 'bar' }, done);
+    });
+  });
+
   describe('other type', function () {
     var app = App();
 
