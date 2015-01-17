@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/koajs/body-parser.git"
+    "url": "git://github.com/koajs/bodyparser.git"
   },
   "files": [
     "index.js"
