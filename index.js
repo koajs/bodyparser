@@ -81,6 +81,8 @@ function formOptions(opts) {
 function extendType(original, extend) {
   if (extend) {
     if (!Array.isArray(extend)) extend = [extend];
-    extend.forEach(original.push.bind(original));
+    extend.forEach(function (extend) {
+      original.push(extend);
+    });
   }
 }
