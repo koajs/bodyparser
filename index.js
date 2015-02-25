@@ -5,7 +5,7 @@
  *
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
+ *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
  */
 
 'use strict';
@@ -27,6 +27,8 @@ var copy = require('copy-to');
 
 module.exports = function (opts) {
   opts = opts || {};
+  var detectJSON = opts.detectJSON;
+  opts.detectJSON = undefined;
   var jsonOpts = jsonOptions(opts);
   var formOpts = formOptions(opts);
   var extendTypes = opts.extendTypes || {};
@@ -52,7 +54,7 @@ module.exports = function (opts) {
       return yield* next;
     }
 
-    if (this.request.is(jsonTypes)) {
+    if ((detectJSON && detectJSON(this)) || this.request.is(jsonTypes)) {
       this.request.body = yield parse.json(this, jsonOpts);
     } else if (this.request.is(formTypes)) {
       this.request.body = yield parse.form(this, formOpts);
@@ -80,7 +82,9 @@ function formOptions(opts) {
 
 function extendType(original, extend) {
   if (extend) {
-    if (!Array.isArray(extend)) extend = [extend];
+    if (!Array.isArray(extend)) {
+      extend = [extend];
+    }
     extend.forEach(function (extend) {
       original.push(extend);
     });
