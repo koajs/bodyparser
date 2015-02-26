@@ -6,7 +6,7 @@
  *
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
+ *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
  */
 
 "use strict";
@@ -15,7 +15,6 @@
  * Module dependencies.
  */
 
-var fs = require('fs');
 var path = require('path');
 var request = require('supertest');
 var koa = require('koa');
@@ -80,6 +79,43 @@ describe('test/middleware.test.js', function () {
       .post('/')
       .send(require(path.join(fixtures, 'raw.json')))
       .expect(413, done);
+    });
+
+    describe('opts.detectJSON', function () {
+      it('should parse json body on /foo.json request', function (done) {
+        var app = App({
+          detectJSON: function (ctx) {
+            return /\.json/i.test(ctx.path);
+          }
+        });
+
+        app.use(function *() {
+          this.request.body.should.eql( {foo: 'bar'} );
+          this.body = this.request.body;
+        });
+
+        request(app.listen())
+        .post('/foo.json')
+        .send(JSON.stringify({ foo: 'bar' }))
+        .expect({ foo: 'bar' }, done);
+      });
+
+      it('should not parse json body on /foo request', function (done) {
+        var app = App({
+          detectJSON: function (ctx) {
+            return /\.json/i.test(ctx.path);
+          }
+        });
+
+        app.use(function *() {
+          this.body = this.request.body;
+        });
+
+        request(app.listen())
+        .post('/foo')
+        .send(JSON.stringify({ foo: 'bar' }))
+        .expect({ '{"foo":"bar"}': '' }, done);
+      });
     });
   });
 
@@ -157,7 +193,7 @@ describe('test/middleware.test.js', function () {
       .end(function () {});
     });
   });
-})
+});
 
 function App(options) {
   var app = koa();
