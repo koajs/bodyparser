@@ -51,7 +51,8 @@ module.exports = function (opts) {
 
   return function *bodyParser(next) {
     if (this.request.body !== undefined) {
-      return yield* next;
+      yield next;
+      return;
     }
 
     if ((detectJSON && detectJSON(this)) || this.request.is(jsonTypes)) {
@@ -62,7 +63,7 @@ module.exports = function (opts) {
       this.request.body = null;
     }
 
-    yield* next;
+    yield next;
   };
 };
 
