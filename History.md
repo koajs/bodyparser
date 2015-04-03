@@ -1,4 +1,9 @@
 
+1.5.0 / 2015-04-04 
+==================
+
+  * Use an empty object instead of null, if no body is parsed
+
 1.4.1 / 2015-03-10 
 ==================
 
