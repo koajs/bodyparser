@@ -59,7 +59,7 @@ module.exports = function (opts) {
     } else if (this.request.is(formTypes)) {
       this.request.body = yield parse.form(this, formOpts);
     } else {
-      this.request.body = null;
+      this.request.body = {};
     }
 
     yield* next;

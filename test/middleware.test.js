@@ -185,7 +185,7 @@ describe('test/middleware.test.js', function () {
 
     it('should get body null', function (done) {
       app.use(function *() {
-        should.not.exist(this.request.body);
+        this.request.body.should.eql( {} );
         done();
       });
       request(app.listen())
