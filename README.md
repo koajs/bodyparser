@@ -50,6 +50,7 @@ app.use(function *() {
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`
 * **jsonLimit**: limit of the `json` body. Default is `1mb`
 * **detectJSON**: custom json request detect function. Default is `null`
+
   ```js
   app.use(bodyparser({
     detectJSON: function (ctx) {
@@ -57,7 +58,9 @@ app.use(function *() {
     }
   }));
   ```
+
 * **extendTypes**: support extend types:
+
   ```js
   app.use(bodyparser({
     extendTypes: {
@@ -65,7 +68,9 @@ app.use(function *() {
     }
   }));
   ```
+
 * **onerror**: support custom error handle, if `koa-bodyparser` throw an error, you can customize the response like:
+
   ```js
   app.use(bodyparser({
     onerror: function (err, ctx) {
@@ -73,6 +78,7 @@ app.use(function *() {
     }
   }));
   ```
+
 ## Licences
 
 [MIT](LICENSE)
