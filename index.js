@@ -28,7 +28,10 @@ var copy = require('copy-to');
 module.exports = function (opts) {
   opts = opts || {};
   var detectJSON = opts.detectJSON;
+  var onerror = opts.onerror;
   opts.detectJSON = undefined;
+  opts.onerror = undefined;
+
   var jsonOpts = jsonOptions(opts);
   var formOpts = formOptions(opts);
   var extendTypes = opts.extendTypes || {};
@@ -50,20 +53,30 @@ module.exports = function (opts) {
   extendType(formTypes, extendTypes.form);
 
   return function *bodyParser(next) {
-    if (this.request.body !== undefined) {
-      return yield* next;
-    }
+    if (this.request.body !== undefined) return yield* next;
 
-    if ((detectJSON && detectJSON(this)) || this.request.is(jsonTypes)) {
-      this.request.body = yield parse.json(this, jsonOpts);
-    } else if (this.request.is(formTypes)) {
-      this.request.body = yield parse.form(this, formOpts);
-    } else {
-      this.request.body = {};
+    try {
+      yield* parseBody(this);
+    } catch (err) {
+      if (onerror) {
+        onerror(err, this);
+      } else {
+        throw err;
+      }
     }
 
     yield* next;
   };
+
+  function* parseBody(ctx) {
+    if ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes)) {
+      ctx.request.body = yield parse.json(ctx, jsonOpts);
+    } else if (ctx.request.is(formTypes)) {
+      ctx.request.body = yield parse.form(ctx, formOpts);
+    } else {
+      ctx.request.body = {};
+    }
+  }
 };
 
 function jsonOptions(opts) {

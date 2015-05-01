@@ -65,7 +65,14 @@ app.use(function *() {
     }
   }));
   ```
-
+* **onerror**: support custom error handle, if `koa-bodyparser` throw an error, you can customize the response like:
+  ```js
+  app.use(bodyparser({
+    onerror: function (err, ctx) {
+      ctx.throw('body parse error', 422);
+    }
+  }));
+  ```
 ## Licences
 
 [MIT](LICENSE)

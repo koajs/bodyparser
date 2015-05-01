@@ -193,6 +193,25 @@ describe('test/middleware.test.js', function () {
       .end(function () {});
     });
   });
+
+  describe('onerror', function () {
+    var app = App({
+      onerror: function (err, ctx) {
+        ctx.throw('custom parse error', 422);
+      }
+    });
+
+    it('should get custom error message', function (done) {
+      app.use(function *() {
+      });
+      request(app.listen())
+      .post('/')
+      .send('test')
+      .set('content-type', 'application/json')
+      .expect(422)
+      .expect('custom parse error', done);
+    });
+  });
 });
 
 function App(options) {
