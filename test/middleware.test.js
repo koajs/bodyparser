@@ -81,6 +81,31 @@ describe('test/middleware.test.js', function () {
       .expect(413, done);
     });
 
+    it('should json body error with string in strict mode', function (done) {
+      var app = App({jsonLimit: 100});
+      app.use(function *() {
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send('"invalid"')
+      .expect(400, done);
+    });
+
+    it('should json body ok with string not in strict mode', function (done) {
+      var app = App({jsonLimit: 100, strict: false});
+      app.use(function *() {
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .set('Content-type', 'application/json')
+      .send('"valid"')
+      .expect(200)
+      .expect('valid', done);
+    });
+
     describe('opts.detectJSON', function () {
       it('should parse json body on /foo.json request', function (done) {
         var app = App({
