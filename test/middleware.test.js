@@ -242,7 +242,6 @@ describe('test/middleware.test.js', function () {
 function App(options) {
   var app = koa();
   // app.outputErrors = true;
-  app.keys = ['a', 'b'];
   app.use(bodyParser(options));
   return app;
 }
