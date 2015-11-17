@@ -54,7 +54,9 @@ module.exports = function (opts) {
 
   return function bodyParser(ctx, next) {
     if (ctx.request.body !== undefined) return next();
-    return parseBody(ctx).then(function() {
+
+    return parseBody(ctx).then(function(body) {
+      ctx.request.body = body;
       return next();
     }, function(err) {
       if (onerror) {
@@ -67,17 +69,12 @@ module.exports = function (opts) {
 
   function parseBody(ctx) {
     if ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes)) {
-       return parse.json(ctx, jsonOpts).then(function(body) {
-        ctx.request.body = body;
-      });
+      return parse.json(ctx, jsonOpts);
     } else if (ctx.request.is(formTypes)) {
-      return parse.form(ctx, formOpts).then(function(body) {
-        ctx.request.body = body;
-      });
+      return parse.form(ctx, formOpts);
     } else {
-      ctx.request.body = {};
+      return Promise.resolve({});
     }
-    return Promise.resolve();
   }
 };
 
