@@ -14,8 +14,8 @@
  * Module dependencies.
  */
 
-var parse = require('co-body');
-var copy = require('copy-to');
+const parse = require('co-body');
+const copy = require('copy-to');
 
 /**
  * @param [Object] opts
@@ -27,17 +27,17 @@ var copy = require('copy-to');
 
 module.exports = function (opts) {
   opts = opts || {};
-  var detectJSON = opts.detectJSON;
-  var onerror = opts.onerror;
+  const detectJSON = opts.detectJSON;
+  const onerror = opts.onerror;
   opts.detectJSON = undefined;
   opts.onerror = undefined;
 
-  var jsonOpts = jsonOptions(opts);
-  var formOpts = formOptions(opts);
-  var extendTypes = opts.extendTypes || {};
+  const jsonOpts = jsonOptions(opts);
+  const formOpts = formOptions(opts);
+  const extendTypes = opts.extendTypes || {};
 
   // default json types
-  var jsonTypes = [
+  const jsonTypes = [
     'application/json',
     'application/json-patch+json',
     'application/vnd.api+json',
@@ -45,7 +45,7 @@ module.exports = function (opts) {
   ];
 
   // default form types
-  var formTypes = [
+  const formTypes = [
     'application/x-www-form-urlencoded',
   ];
 
@@ -80,14 +80,14 @@ module.exports = function (opts) {
 };
 
 function jsonOptions(opts) {
-  var jsonOpts = {};
+  const jsonOpts = {};
   copy(opts).to(jsonOpts);
   jsonOpts.limit = opts.jsonLimit;
   return jsonOpts;
 }
 
 function formOptions(opts) {
-  var formOpts = {};
+  const formOpts = {};
   copy(opts).to(formOpts);
   formOpts.limit = opts.formLimit;
   return formOpts;
