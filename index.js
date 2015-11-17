@@ -52,30 +52,32 @@ module.exports = function (opts) {
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
 
-  return function *bodyParser(next) {
-    if (this.request.body !== undefined) return yield* next;
-
-    try {
-      yield* parseBody(this);
-    } catch (err) {
+  return function bodyParser(ctx, next) {
+    if (ctx.request.body !== undefined) return next();
+    return parseBody(ctx).then(function() {
+      return next();
+    }, function(err) {
       if (onerror) {
-        onerror(err, this);
+        onerror(err, ctx);
       } else {
         throw err;
       }
-    }
-
-    yield* next;
+    });
   };
 
-  function* parseBody(ctx) {
+  function parseBody(ctx) {
     if ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes)) {
-      ctx.request.body = yield parse.json(ctx, jsonOpts);
+       return parse.json(ctx, jsonOpts).then(function(body) {
+        ctx.request.body = body;
+      });
     } else if (ctx.request.is(formTypes)) {
-      ctx.request.body = yield parse.form(ctx, formOpts);
+      return parse.form(ctx, formOpts).then(function(body) {
+        ctx.request.body = body;
+      });
     } else {
       ctx.request.body = {};
     }
+    return Promise.resolve();
   }
 };
 
