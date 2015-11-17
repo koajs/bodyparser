@@ -31,7 +31,7 @@ describe('test/middleware.test.js', function () {
       // should work when use body parser again
       app.use(bodyParser());
 
-      app.use(function(ctx, next) {
+      app.use(function(ctx) {
         ctx.request.body.should.eql( {foo: 'bar'} );
         ctx.body = ctx.request.body;
       });
@@ -45,7 +45,7 @@ describe('test/middleware.test.js', function () {
       // should work when use body parser again
       app.use(bodyParser());
 
-      app.use(function(ctx, next) {
+      app.use(function(ctx) {
         ctx.request.body.should.eql( {foo: 'bar'} );
         ctx.body = ctx.request.body;
       });
@@ -59,7 +59,7 @@ describe('test/middleware.test.js', function () {
 
     it('should parse json patch', function (done) {
       const app = App();
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
         ctx.body = ctx.request.body;
       });
@@ -72,7 +72,7 @@ describe('test/middleware.test.js', function () {
 
     it('should json body reach the limit size', function (done) {
       const app = App({jsonLimit: 100});
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.body = ctx.request.body;
       });
       request(app.listen())
@@ -83,7 +83,7 @@ describe('test/middleware.test.js', function () {
 
     it('should json body error with string in strict mode', function (done) {
       const app = App({jsonLimit: 100});
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.body = ctx.request.body;
       });
       request(app.listen())
@@ -95,7 +95,7 @@ describe('test/middleware.test.js', function () {
 
     it('should json body ok with string not in strict mode', function (done) {
       const app = App({jsonLimit: 100, strict: false});
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.body = ctx.request.body;
       });
       request(app.listen())
@@ -114,7 +114,7 @@ describe('test/middleware.test.js', function () {
           }
         });
 
-        app.use(function (ctx, next) {
+        app.use(function(ctx) {
           ctx.request.body.should.eql( {foo: 'bar'} );
           ctx.body = ctx.request.body;
         });
@@ -132,7 +132,7 @@ describe('test/middleware.test.js', function () {
           }
         });
 
-        app.use(function (ctx, next) {
+        app.use(function(ctx) {
           ctx.body = ctx.request.body;
         });
 
@@ -148,7 +148,7 @@ describe('test/middleware.test.js', function () {
     const app = App();
 
     it('should parse form body ok', function (done) {
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.request.body.should.eql( { foo: {bar: 'baz'} } );
         ctx.body = ctx.request.body;
       });
@@ -176,7 +176,7 @@ describe('test/middleware.test.js', function () {
           json: 'application/x-javascript'
         }
       });
-      app.use(function(ctx, next) {
+      app.use(function(ctx) {
         ctx.body = ctx.request.body;
       });
 
@@ -193,7 +193,7 @@ describe('test/middleware.test.js', function () {
           json: ['application/x-javascript', 'application/y-javascript']
         }
       });
-      app.use(function(ctx, next) {
+      app.use(function(ctx) {
         ctx.body = ctx.request.body;
       });
 
@@ -209,7 +209,7 @@ describe('test/middleware.test.js', function () {
     const app = App();
 
     it('should get body null', function (done) {
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
         ctx.request.body.should.eql( {} );
         done();
       });
@@ -227,7 +227,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should get custom error message', function (done) {
-      app.use(function (ctx, next) {
+      app.use(function(ctx) {
       });
       request(app.listen())
       .post('/')
