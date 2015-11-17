@@ -34,7 +34,6 @@ describe('test/middleware.test.js', function () {
       app.use(function(ctx, next) {
         ctx.request.body.should.eql( {foo: 'bar'} );
         ctx.body = ctx.request.body;
-        return next();
       });
       request(app.listen())
       .post('/')
@@ -179,7 +178,6 @@ describe('test/middleware.test.js', function () {
       });
       app.use(function(ctx, next) {
         ctx.body = ctx.request.body;
-        return next();
       });
 
       request(app.listen())
@@ -197,7 +195,6 @@ describe('test/middleware.test.js', function () {
       });
       app.use(function(ctx, next) {
         ctx.body = ctx.request.body;
-        return next();
       });
 
       request(app.listen())
