@@ -24,7 +24,7 @@ koa-bodyparser
 
 a body parser for koa, base on [co-body](https://github.com/tj/co-body).
 
-___ Notice: `koa-bodyparser@3` support `koa@2`, if you want to use this module with `koa@1`, please use `koa-bodyparser@2`.___
+___Notice: `koa-bodyparser@3` support `koa@2`, if you want to use this module with `koa@1`, please use `koa-bodyparser@2`.___
 
 ## Install
 
