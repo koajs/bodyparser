@@ -1,12 +1,12 @@
-var koa = require('koa');
+var Koa = require('koa');
 var bodyParser = require('./');
 
-var app = koa();
+var app = new Koa();
 app.use(bodyParser());
 
-app.use(function *() {
+app.use((ctx) => {
   // the parsed body will store in this.request.body
-  this.body = this.request.body;
+  ctx.body = ctx.request.body;
 });
 
 app.listen(3000);
