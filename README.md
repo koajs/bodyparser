@@ -34,9 +34,9 @@ ___Notice: `koa-bodyparser@3` support `koa@2`, if you want to use this module wi
 
 ```js
 var bodyParser = require('koa-bodyparser');
-var koa = require('koa');
+var Koa = require('koa');
 
-var app = new koa();
+var app = new Koa();
 app.use(bodyParser());
 
 app.use((ctx) => {
