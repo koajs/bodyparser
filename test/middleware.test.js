@@ -15,25 +15,25 @@
  * Module dependencies.
  */
 
-var path = require('path');
-var request = require('supertest');
-var koa = require('koa');
-var should = require('should');
-var bodyParser = require('../');
+const path = require('path');
+const request = require('supertest');
+const Koa = require('koa');
+const should = require('should');
+const bodyParser = require('../');
 
-var fixtures = path.join(__dirname, 'fixtures');
+const fixtures = path.join(__dirname, 'fixtures');
 
 describe('test/middleware.test.js', function () {
   describe('json body', function () {
-    var app = App();
+    const app = App();
 
     it('should parse json body ok', function (done) {
       // should work when use body parser again
       app.use(bodyParser());
 
-      app.use(function *() {
-        this.request.body.should.eql( {foo: 'bar'} );
-        this.body = this.request.body;
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( {foo: 'bar'} );
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
       .post('/')
@@ -45,9 +45,9 @@ describe('test/middleware.test.js', function () {
       // should work when use body parser again
       app.use(bodyParser());
 
-      app.use(function *() {
-        this.request.body.should.eql( {foo: 'bar'} );
-        this.body = this.request.body;
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( {foo: 'bar'} );
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
         .post('/')
@@ -58,10 +58,10 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should parse json patch', function (done) {
-      var app = App();
-      app.use(function *() {
-        this.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
-        this.body = this.request.body;
+      const app = App();
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
         .patch('/')
@@ -71,9 +71,9 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body reach the limit size', function (done) {
-      var app = App({jsonLimit: 100});
-      app.use(function *() {
-        this.body = this.request.body;
+      const app = App({jsonLimit: 100});
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
       .post('/')
@@ -82,9 +82,9 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body error with string in strict mode', function (done) {
-      var app = App({jsonLimit: 100});
-      app.use(function *() {
-        this.body = this.request.body;
+      const app = App({jsonLimit: 100});
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
       .post('/')
@@ -94,9 +94,9 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body ok with string not in strict mode', function (done) {
-      var app = App({jsonLimit: 100, strict: false});
-      app.use(function *() {
-        this.body = this.request.body;
+      const app = App({jsonLimit: 100, strict: false});
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
       .post('/')
@@ -108,15 +108,15 @@ describe('test/middleware.test.js', function () {
 
     describe('opts.detectJSON', function () {
       it('should parse json body on /foo.json request', function (done) {
-        var app = App({
+        const app = App({
           detectJSON: function (ctx) {
             return /\.json/i.test(ctx.path);
           }
         });
 
-        app.use(function *() {
-          this.request.body.should.eql( {foo: 'bar'} );
-          this.body = this.request.body;
+        app.use(function(ctx) {
+          ctx.request.body.should.eql( {foo: 'bar'} );
+          ctx.body = ctx.request.body;
         });
 
         request(app.listen())
@@ -126,14 +126,14 @@ describe('test/middleware.test.js', function () {
       });
 
       it('should not parse json body on /foo request', function (done) {
-        var app = App({
+        const app = App({
           detectJSON: function (ctx) {
             return /\.json/i.test(ctx.path);
           }
         });
 
-        app.use(function *() {
-          this.body = this.request.body;
+        app.use(function(ctx) {
+          ctx.body = ctx.request.body;
         });
 
         request(app.listen())
@@ -145,12 +145,12 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('form body', function () {
-    var app = App();
+    const app = App();
 
     it('should parse form body ok', function (done) {
-      app.use(function *() {
-        this.request.body.should.eql( { foo: {bar: 'baz'} } );
-        this.body = this.request.body;
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( { foo: {bar: 'baz'} } );
+        ctx.body = ctx.request.body;
       });
       request(app.listen())
       .post('/')
@@ -160,7 +160,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should parse form body reach the limit size', function (done) {
-      var app = App({formLimit: 10});
+      const app = App({formLimit: 10});
       request(app.listen())
       .post('/')
       .type('form')
@@ -171,13 +171,13 @@ describe('test/middleware.test.js', function () {
 
   describe('extent type', function () {
     it('should extent json ok', function (done) {
-      var app = App({
+      const app = App({
         extendTypes: {
           json: 'application/x-javascript'
         }
       });
-      app.use(function* () {
-        this.body = this.request.body;
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
       });
 
       request(app.listen())
@@ -188,13 +188,13 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should extent json with array ok', function (done) {
-      var app = App({
+      const app = App({
         extendTypes: {
           json: ['application/x-javascript', 'application/y-javascript']
         }
       });
-      app.use(function* () {
-        this.body = this.request.body;
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
       });
 
       request(app.listen())
@@ -206,11 +206,11 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('other type', function () {
-    var app = App();
+    const app = App();
 
     it('should get body null', function (done) {
-      app.use(function *() {
-        this.request.body.should.eql( {} );
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( {} );
         done();
       });
       request(app.listen())
@@ -220,14 +220,14 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('onerror', function () {
-    var app = App({
+    const app = App({
       onerror: function (err, ctx) {
         ctx.throw('custom parse error', 422);
       }
     });
 
     it('should get custom error message', function (done) {
-      app.use(function *() {
+      app.use(function(ctx) {
       });
       request(app.listen())
       .post('/')
@@ -240,7 +240,7 @@ describe('test/middleware.test.js', function () {
 });
 
 function App(options) {
-  var app = koa();
+  const app = new Koa();
   // app.outputErrors = true;
   app.use(bodyParser(options));
   return app;
