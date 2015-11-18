@@ -15,7 +15,6 @@
  */
 
 const parse = require('co-body');
-const copy = require('copy-to');
 
 /**
  * @param [Object] opts
@@ -28,7 +27,8 @@ const copy = require('copy-to');
 module.exports = function (opts) {
   opts = opts || {};
   const detectJSON = opts.detectJSON;
-  const onerror = opts.onerror;
+  const onerror = opts.onerror || throwError;
+
   opts.detectJSON = undefined;
   opts.onerror = undefined;
 
@@ -55,16 +55,10 @@ module.exports = function (opts) {
   return function bodyParser(ctx, next) {
     if (ctx.request.body !== undefined) return next();
 
-    return parseBody(ctx).then(function(body) {
+    return parseBody(ctx).then(body => {
       ctx.request.body = body;
       return next();
-    }, function(err) {
-      if (onerror) {
-        onerror(err, ctx);
-      } else {
-        throw err;
-      }
-    });
+    }, err => onerror(err, ctx));
   };
 
   function parseBody(ctx) {
@@ -80,14 +74,14 @@ module.exports = function (opts) {
 
 function jsonOptions(opts) {
   const jsonOpts = {};
-  copy(opts).to(jsonOpts);
+  Object.assign(jsonOpts, opts);
   jsonOpts.limit = opts.jsonLimit;
   return jsonOpts;
 }
 
 function formOptions(opts) {
   const formOpts = {};
-  copy(opts).to(formOpts);
+  Object.assign(formOpts, opts);
   formOpts.limit = opts.formLimit;
   return formOpts;
 }
@@ -97,8 +91,10 @@ function extendType(original, extend) {
     if (!Array.isArray(extend)) {
       extend = [extend];
     }
-    extend.forEach(function (extend) {
-      original.push(extend);
-    });
+    extend.forEach(extend => original.push(extend));
   }
+}
+
+function throwError(err) {
+  throw err;
 }
