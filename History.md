@@ -1,5 +1,11 @@
 
-2.0.1 / 2015-08-12 
+3.0.0 / 2015-11-18 
+==================
+
+  * refactor: more es6
+  * Use promises rather than generators
+
+2.0.1 / 2015-08-12
 ==================
 
   * chore: upgrade co-body@3.1.0
