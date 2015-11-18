@@ -39,7 +39,7 @@ var Koa = require('koa');
 var app = new Koa();
 app.use(bodyParser());
 
-app.use((ctx) => {
+app.use(ctx => {
   // the parsed body will store in this.request.body
   // if nothing was parsed, body will be an empty object {}
   ctx.body = ctx.request.body;
