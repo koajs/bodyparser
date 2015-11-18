@@ -33,16 +33,16 @@ ___ Notice: `koa-bodyparser@3` support `koa@2`, if you want to use this module w
 ## Usage
 
 ```js
-var koa = require('koa');
 var bodyParser = require('koa-bodyparser');
+var koa = require('koa');
 
-var app = koa();
+var app = new koa();
 app.use(bodyParser());
 
-app.use(function *() {
+app.use(function(ctx, next) {
   // the parsed body will store in this.request.body
   // if nothing was parsed, body will be an empty object {}
-  this.body = this.request.body;
+  ctx.body = ctx.request.body;
 });
 ```
 
