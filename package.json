@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/koajs/body-parser",
   "devDependencies": {
-    "autod": "1",
+    "autod": "2.4.2",
     "istanbul-harmony": "~0.3.12",
     "koa": "~0.20.0",
     "mocha": "~2.2.4",
