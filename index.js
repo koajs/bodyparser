@@ -49,8 +49,13 @@ module.exports = function (opts) {
     'application/x-www-form-urlencoded',
   ];
 
+  const textTypes = [
+    'text/plain',
+  ];
+
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
+  extendType(textTypes, extendTypes.text);
 
   return function bodyParser(ctx, next) {
     if (ctx.request.body !== undefined) return next();
@@ -66,6 +71,8 @@ module.exports = function (opts) {
       return parse.json(ctx, jsonOpts);
     } else if (ctx.request.is(formTypes)) {
       return parse.form(ctx, formOpts);
+    } else if (ctx.request.is(textTypes)) {
+      return parse.text(ctx, formOpts);
     } else {
       return Promise.resolve({});
     }
