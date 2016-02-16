@@ -169,6 +169,31 @@ describe('test/middleware.test.js', function () {
     });
   });
 
+  describe('plain text body', function () {
+    const app = App();
+
+    it('should parse plain text body ok', function (done) {
+      app.use(function(ctx) {
+        ctx.request.body.should.eql( 'foo bar baz' );
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('text/plain')
+      .send('foo bar baz')
+      .expect('foo bar baz', done);
+    });
+
+    it('should parse plain text body reach the limit size', function (done) {
+      const app = App({formLimit: 10});
+      request(app.listen())
+      .post('/')
+      .type('text/plain')
+      .send('foo bar baz')
+      .expect(413, done);
+    });
+  });
+
   describe('extent type', function () {
     it('should extent json ok', function (done) {
       const app = App({
@@ -203,6 +228,41 @@ describe('test/middleware.test.js', function () {
         .send(JSON.stringify({ foo: 'bar' }))
         .expect({ foo: 'bar' }, done);
     });
+
+    it('should extend plain text ok', function (done) {
+      const app = App({
+        extendTypes: {
+          text: 'text/plain2'
+        }
+      });
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
+      });
+
+      request(app.listen())
+        .post('/')
+        .type('text/plain2')
+        .send('foo bar baz')
+        .expect('foo bar baz', done);
+    });
+
+    it('should extent plain text with array ok', function (done) {
+      const app = App({
+        extendTypes: {
+          text: ['text/plain2', 'text/plain3']
+        }
+      });
+      app.use(function(ctx) {
+        ctx.body = ctx.request.body;
+      });
+
+      request(app.listen())
+        .post('/')
+        .type('text/plain3')
+        .send('foo bar baz')
+        .expect('foo bar baz', done);
+    });
+
   });
 
   describe('other type', function () {
