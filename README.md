@@ -80,6 +80,14 @@ app.use(function *() {
   }));
   ```
 
+## Koa 2 Support
+
+To use `koa-bodyparser` with koa@2, please use
+
+```bash
+npm install koa-bodyparser@next --save
+```
+
 ## Licences
 
 [MIT](LICENSE)
