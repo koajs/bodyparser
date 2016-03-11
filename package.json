@@ -25,6 +25,9 @@
   "bugs": {
     "url": "https://github.com/koajs/body-parser/issues"
   },
+  "publishConfig": {
+    "tag": "next"
+  },
   "homepage": "https://github.com/koajs/body-parser",
   "devDependencies": {
     "autod": "1",
