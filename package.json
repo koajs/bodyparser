@@ -39,7 +39,7 @@
     "supertest": "~0.9.0"
   },
   "dependencies": {
-    "co-body": "~4.0.0"
+    "co-body": "~4.2.0"
   },
   "engines": {
     "node": ">= 4"
