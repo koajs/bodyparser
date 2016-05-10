@@ -39,9 +39,8 @@ test-travis:
 autod:
 	@./node_modules/.bin/autod -w \
 		-e example.js \
-		-f "~" \
+		-f "^" \
 		-k supertest \
-		-D mocha,should,istanbul-harmony
-	@$(MAKE) install
+		-D mocha,should,istanbul
 
 .PHONY: test
