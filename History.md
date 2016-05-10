@@ -1,5 +1,12 @@
 
-3.0.0 / 2015-11-18 
+3.1.0 / 2016-05-10
+==================
+
+  * deps: ^
+  * no need for parenthesis around single param declaration
+  * capitalize koa constructor
+
+3.0.0 / 2015-11-18
 ==================
 
   * refactor: more es6
