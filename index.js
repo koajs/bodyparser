@@ -29,12 +29,14 @@ module.exports = function (opts) {
   opts = opts || {};
   var detectJSON = opts.detectJSON;
   var onerror = opts.onerror;
+
+  var enableTypes = opts.enableTypes || ['json', 'form'];
+  var enableForm = checkEnable(enableTypes, 'form');
+  var enableJson = checkEnable(enableTypes, 'json');
+  var enableText = checkEnable(enableTypes, 'text');
+
   opts.detectJSON = undefined;
   opts.onerror = undefined;
-
-  var jsonOpts = jsonOptions(opts);
-  var formOpts = formOptions(opts);
-  var extendTypes = opts.extendTypes || {};
 
   // default json types
   var jsonTypes = [
@@ -49,14 +51,25 @@ module.exports = function (opts) {
     'application/x-www-form-urlencoded',
   ];
 
+  // default text types
+  var textTypes = [
+    'text/plain',
+  ];
+
+  var jsonOpts = formatOptions(opts, 'json');
+  var formOpts = formatOptions(opts, 'form');
+  var textOpts = formatOptions(opts, 'text');
+
+  var extendTypes = opts.extendTypes || {};
+
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
+  extendType(textTypes, extendTypes.text);
 
   return function *bodyParser(next) {
     if (this.request.body !== undefined) return yield* next;
-
     try {
-      yield* parseBody(this);
+      this.request.body = yield parseBody(this);
     } catch (err) {
       if (onerror) {
         onerror(err, this);
@@ -64,33 +77,28 @@ module.exports = function (opts) {
         throw err;
       }
     }
-
-    yield* next;
+    yield next;
   };
 
   function* parseBody(ctx) {
-    if ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes)) {
-      ctx.request.body = yield parse.json(ctx, jsonOpts);
-    } else if (ctx.request.is(formTypes)) {
-      ctx.request.body = yield parse.form(ctx, formOpts);
-    } else {
-      ctx.request.body = {};
+    if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
+      return yield parse.json(ctx, jsonOpts);
     }
+    if (enableForm && ctx.request.is(formTypes)) {
+      return yield parse.form(ctx, formOpts);
+    }
+    if (enableText && ctx.request.is(textTypes)) {
+      return yield parse.text(ctx, textOpts) || '';
+    }
+    return {};
   }
 };
 
-function jsonOptions(opts) {
-  var jsonOpts = {};
-  copy(opts).to(jsonOpts);
-  jsonOpts.limit = opts.jsonLimit;
-  return jsonOpts;
-}
-
-function formOptions(opts) {
-  var formOpts = {};
-  copy(opts).to(formOpts);
-  formOpts.limit = opts.formLimit;
-  return formOpts;
+function formatOptions(opts, type) {
+  var res = {};
+  copy(opts).to(res);
+  res.limit = opts[type + 'Limit'];
+  return res;
 }
 
 function extendType(original, extend) {
@@ -102,4 +110,8 @@ function extendType(original, extend) {
       original.push(extend);
     });
   }
+}
+
+function checkEnable(types, type) {
+  return types.indexOf(type) >= 0;
 }
