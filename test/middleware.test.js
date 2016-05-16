@@ -169,6 +169,35 @@ describe('test/middleware.test.js', function () {
     });
   });
 
+  describe('text body', function () {
+    it('should parse text body ok', function (done) {
+      var app = App({
+        enableTypes: ['text', 'json'],
+      });
+      app.use(function *() {
+        this.request.body.should.equal('body');
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('text')
+      .send('body')
+      .expect('body', done);
+    });
+
+    it('should not parse text body when disable', function (done) {
+      var app = App();
+      app.use(function *() {
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('text')
+      .send('body')
+      .expect({}, done);
+    });
+  });
+
   describe('extent type', function () {
     it('should extent json ok', function (done) {
       var app = App({
@@ -205,17 +234,34 @@ describe('test/middleware.test.js', function () {
     });
   });
 
+  describe('enableTypes', function () {
+    it('should disable json success', function (done) {
+      var app = App({
+        enableTypes: ['form'],
+      });
+
+      app.use(function *() {
+        this.body = this.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('json')
+      .send({ foo: 'bar' })
+      .expect({}, done);
+    });
+  });
+
   describe('other type', function () {
     var app = App();
 
     it('should get body null', function (done) {
       app.use(function *() {
         this.request.body.should.eql( {} );
-        done();
+        this.body = this.request.body;
       });
       request(app.listen())
       .get('/')
-      .end(function () {});
+      .expect({}, done);
     });
   });
 
@@ -241,7 +287,6 @@ describe('test/middleware.test.js', function () {
 
 function App(options) {
   var app = koa();
-  // app.outputErrors = true;
   app.use(bodyParser(options));
   return app;
 }
