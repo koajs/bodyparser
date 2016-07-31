@@ -31,9 +31,8 @@
   "homepage": "https://github.com/koajs/body-parser",
   "devDependencies": {
     "autod": "1",
-    "istanbul": "^0.4.0",
-    "istanbul-harmony": "~0.3.16",
-    "koa": "~2.0.0-alpha.3",
+    "istanbul": "~0.4.0",
+    "koa": "next",
     "mocha": "~2.3.4",
     "should": "~7.1.1",
     "supertest": "~0.9.0"
