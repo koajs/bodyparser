@@ -29,12 +29,13 @@ module.exports = function (opts) {
   const detectJSON = opts.detectJSON;
   const onerror = opts.onerror || throwError;
 
+  const enableTypes = opts.enableTypes || ['json', 'form'];
+  const enableForm = checkEnable(enableTypes, 'form');
+  const enableJson = checkEnable(enableTypes, 'json');
+  const enableText = checkEnable(enableTypes, 'text');
+
   opts.detectJSON = undefined;
   opts.onerror = undefined;
-
-  const jsonOpts = jsonOptions(opts);
-  const formOpts = formOptions(opts);
-  const extendTypes = opts.extendTypes || {};
 
   // default json types
   const jsonTypes = [
@@ -49,8 +50,21 @@ module.exports = function (opts) {
     'application/x-www-form-urlencoded',
   ];
 
+  // default text types
+  const textTypes = [
+    'text/plain',
+  ];
+
+
+  const jsonOpts = formatOptions(opts, 'json');
+  const formOpts = formatOptions(opts, 'form');
+  const textOpts = formatOptions(opts, 'text');
+
+  const extendTypes = opts.extendTypes || {};
+
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
+  extendType(textTypes, extendTypes.text);
 
   return function bodyParser(ctx, next) {
     if (ctx.request.body !== undefined) return next();
@@ -62,28 +76,24 @@ module.exports = function (opts) {
   };
 
   function parseBody(ctx) {
-    if ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes)) {
+    if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
       return parse.json(ctx, jsonOpts);
-    } else if (ctx.request.is(formTypes)) {
-      return parse.form(ctx, formOpts);
-    } else {
-      return Promise.resolve({});
     }
+    if (enableForm && ctx.request.is(formTypes)) {
+      return parse.form(ctx, formOpts);
+    }
+    if (enableText && ctx.request.is(textTypes)) {
+      return parse.text(ctx, textOpts) || '';
+    }
+    return Promise.resolve({});
   }
 };
 
-function jsonOptions(opts) {
-  const jsonOpts = {};
-  Object.assign(jsonOpts, opts);
-  jsonOpts.limit = opts.jsonLimit;
-  return jsonOpts;
-}
-
-function formOptions(opts) {
-  const formOpts = {};
-  Object.assign(formOpts, opts);
-  formOpts.limit = opts.formLimit;
-  return formOpts;
+function formatOptions(opts, type) {
+  var res = {};
+  Object.assign(res, opts);
+  res.limit = opts[type + 'Limit'];
+  return res;
 }
 
 function extendType(original, extend) {
@@ -97,4 +107,8 @@ function extendType(original, extend) {
 
 function throwError(err) {
   throw err;
+}
+
+function checkEnable(types, type) {
+  return types.indexOf(type) >= 0;
 }
