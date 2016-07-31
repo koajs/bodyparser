@@ -1,4 +1,10 @@
 
+3.2.0 / 2016-07-31
+==================
+
+  * test: run ci in node 4, 6
+  * feat: support enableTypes and text
+
 3.1.0 / 2016-05-10
 ==================
 
