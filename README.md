@@ -82,6 +82,16 @@ app.use(function *() {
   }));
   ```
 
+* **disableBodyParser**: you can dynamic disable body parser by set `this.disableBodyParser = true`.
+
+```js
+app.use(function* disableBodyParser(next) {
+  if (this.path === '/disable') this.disableBodyParser = true;
+  return yield next;
+});
+app.use(bodyparser());
+```
+
 ## Koa 2 Support
 
 To use `koa-bodyparser` with koa@2, please use

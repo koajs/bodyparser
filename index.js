@@ -67,7 +67,8 @@ module.exports = function (opts) {
   extendType(textTypes, extendTypes.text);
 
   return function *bodyParser(next) {
-    if (this.request.body !== undefined) return yield* next;
+    if (this.request.body !== undefined) return yield next;
+    if (this.disableBodyParser) return yield next;
     try {
       this.request.body = yield parseBody(this);
     } catch (err) {

@@ -283,6 +283,26 @@ describe('test/middleware.test.js', function () {
       .expect('custom parse error', done);
     });
   });
+
+  describe('disableBodyParser', () => {
+    it('should not parse body when disableBodyParser set to true', function (done) {
+      var app = koa();
+      app.use(function *(next) {
+        this.disableBodyParser = true;
+        yield next;
+      });
+      app.use(bodyParser());
+      app.use(function *() {
+        this.body = this.request.body ? 'parsed' : 'empty';
+      });
+      request(app.listen())
+      .post('/')
+      .send({foo: 'bar'})
+      .set('content-type', 'application/json')
+      .expect(200)
+      .expect('empty', done);
+    });
+  });
 });
 
 function App(options) {
