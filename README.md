@@ -32,7 +32,7 @@ A body parser for koa, base on [co-body](https://github.com/tj/co-body). support
 
 ```js
 var koa = require('koa');
-var bodyParser = require('koa-bodyparser');
+var bodyParser = require('koa-body-parser');
 
 var app = koa();
 app.use(bodyParser());
