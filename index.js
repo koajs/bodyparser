@@ -66,30 +66,30 @@ module.exports = function (opts) {
   extendType(formTypes, extendTypes.form);
   extendType(textTypes, extendTypes.text);
 
-  return function *bodyParser(next) {
-    if (this.request.body !== undefined) return yield next;
-    if (this.disableBodyParser) return yield next;
+  return async function bodyParser(ctx, next) {
+    if (ctx.request.body !== undefined) return await next();
+    if (ctx.disableBodyParser) return await next();
     try {
-      this.request.body = yield parseBody(this);
+      ctx.request.body = await parseBody(ctx);
     } catch (err) {
       if (onerror) {
-        onerror(err, this);
+        onerror(err, ctx);
       } else {
         throw err;
       }
     }
-    yield next;
+    await next();
   };
 
-  function* parseBody(ctx) {
+  async function parseBody(ctx) {
     if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
-      return yield parse.json(ctx, jsonOpts);
+      return await parse.json(ctx, jsonOpts);
     }
     if (enableForm && ctx.request.is(formTypes)) {
-      return yield parse.form(ctx, formOpts);
+      return await parse.form(ctx, formOpts);
     }
     if (enableText && ctx.request.is(textTypes)) {
-      return yield parse.text(ctx, textOpts) || '';
+      return await parse.text(ctx, textOpts) || '';
     }
     return {};
   }
