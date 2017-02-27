@@ -16,7 +16,7 @@ koa-bodyparser
 [coveralls-url]: https://coveralls.io/r/koajs/bodyparser?branch=master
 [david-image]: https://img.shields.io/david/koajs/bodyparser.svg?style=flat-square
 [david-url]: https://david-dm.org/koajs/bodyparser
-[node-image]: https://img.shields.io/badge/node.js-%3E=_0.11-green.svg?style=flat-square
+[node-image]: https://img.shields.io/badge/node.js-%3E=_7.6-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 [gittip-image]: https://img.shields.io/gittip/dead-horse.svg?style=flat-square
 [gittip-url]: https://www.gittip.com/dead-horse/
