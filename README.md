@@ -31,16 +31,16 @@ A body parser for koa, base on [co-body](https://github.com/tj/co-body). support
 ## Usage
 
 ```js
-var koa = require('koa');
+var Koa = require('koa');
 var bodyParser = require('koa-bodyparser');
 
-var app = koa();
+var app = new Koa();
 app.use(bodyParser());
 
-app.use(function *() {
-  // the parsed body will store in this.request.body
+app.use(async ctx => {
+  // the parsed body will store in ctx.request.body
   // if nothing was parsed, body will be an empty object {}
-  this.body = this.request.body;
+  ctx.body = ctx.request.body;
 });
 ```
 
@@ -51,7 +51,7 @@ app.use(function *() {
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`.
 * **jsonLimit**: limit of the `json` body. Default is `1mb`.
 * **textLimit**: limit of the `text` body. Default is `1mb`.
-* **strict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `this.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
+* **strict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `ctx.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
 * **detectJSON**: custom json request detect function. Default is `null`.
 
   ```js
@@ -82,22 +82,22 @@ app.use(function *() {
   }));
   ```
 
-* **disableBodyParser**: you can dynamic disable body parser by set `this.disableBodyParser = true`.
+* **disableBodyParser**: you can dynamic disable body parser by set `ctx.disableBodyParser = true`.
 
 ```js
-app.use(function* disableBodyParser(next) {
-  if (this.path === '/disable') this.disableBodyParser = true;
-  return yield next;
+app.use(async (ctx, next) => {
+  if (ctx.path === '/disable') ctx.disableBodyParser = true;
+  await next();
 });
 app.use(bodyparser());
 ```
 
-## Koa 2 Support
+## Koa 1 Support
 
-To use `koa-bodyparser` with koa@2, please use
+To use `koa-bodyparser` with koa@1, please use [bodyparser 2.x](https://github.com/koajs/bodyparser/tree/2.x).
 
 ```bash
-npm install koa-bodyparser@next --save
+npm install koa-bodyparser@2 --save
 ```
 
 ## Licences
