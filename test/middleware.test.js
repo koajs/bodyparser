@@ -17,7 +17,7 @@
 
 var path = require('path');
 var request = require('supertest');
-var koa = require('koa');
+var Koa = require('koa');
 var should = require('should');
 var bodyParser = require('../');
 
@@ -286,7 +286,7 @@ describe('test/middleware.test.js', function () {
 
   describe('disableBodyParser', () => {
     it('should not parse body when disableBodyParser set to true', function (done) {
-      var app = new koa();
+      var app = new Koa();
       app.use(async (ctx, next) => {
         ctx.disableBodyParser = true;
         await next();
@@ -306,7 +306,7 @@ describe('test/middleware.test.js', function () {
 });
 
 function App(options) {
-  var app = new koa();
+  var app = new Koa();
   app.use(bodyParser(options));
   return app;
 }
