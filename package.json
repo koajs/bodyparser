@@ -1,6 +1,6 @@
 {
   "name": "koa-bodyparser",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "a body parser for koa",
   "main": "index.js",
   "scripts": {
