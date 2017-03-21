@@ -25,7 +25,10 @@ var fixtures = path.join(__dirname, 'fixtures');
 
 describe('test/middleware.test.js', function () {
   describe('json body', function () {
-    var app = App();
+    var app;
+    beforeEach(function() {
+      app = App();
+    });
 
     it('should parse json body ok', function (done) {
       // should work when use body parser again
@@ -33,6 +36,7 @@ describe('test/middleware.test.js', function () {
 
       app.use(function *() {
         this.request.body.should.eql( {foo: 'bar'} );
+        this.request.rawBody.should.equal('{"foo":"bar"}');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -47,6 +51,7 @@ describe('test/middleware.test.js', function () {
 
       app.use(function *() {
         this.request.body.should.eql( {foo: 'bar'} );
+        this.request.rawBody.should.equal('{"foo": "bar"}');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -61,6 +66,7 @@ describe('test/middleware.test.js', function () {
       var app = App();
       app.use(function *() {
         this.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
+        this.request.rawBody.should.equal('[{"op": "add", "path": "/foo", "value": "bar"}]');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -84,6 +90,7 @@ describe('test/middleware.test.js', function () {
     it('should json body error with string in strict mode', function (done) {
       var app = App({jsonLimit: 100});
       app.use(function *() {
+        this.request.rawBody.should.equal('"invalid"');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -96,6 +103,7 @@ describe('test/middleware.test.js', function () {
     it('should json body ok with string not in strict mode', function (done) {
       var app = App({jsonLimit: 100, strict: false});
       app.use(function *() {
+        this.request.rawBody.should.equal('"valid"');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -116,6 +124,7 @@ describe('test/middleware.test.js', function () {
 
         app.use(function *() {
           this.request.body.should.eql( {foo: 'bar'} );
+          this.request.rawBody.should.equal('{"foo":"bar"}');
           this.body = this.request.body;
         });
 
@@ -133,6 +142,7 @@ describe('test/middleware.test.js', function () {
         });
 
         app.use(function *() {
+          this.request.rawBody.should.equal('{"foo":"bar"}');
           this.body = this.request.body;
         });
 
@@ -150,6 +160,7 @@ describe('test/middleware.test.js', function () {
     it('should parse form body ok', function (done) {
       app.use(function *() {
         this.request.body.should.eql( { foo: {bar: 'baz'} } );
+        this.request.rawBody.should.equal('foo%5Bbar%5D=baz');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -176,6 +187,7 @@ describe('test/middleware.test.js', function () {
       });
       app.use(function *() {
         this.request.body.should.equal('body');
+        this.request.rawBody.should.equal('body');
         this.body = this.request.body;
       });
       request(app.listen())
@@ -268,7 +280,7 @@ describe('test/middleware.test.js', function () {
   describe('onerror', function () {
     var app = App({
       onerror: function (err, ctx) {
-        ctx.throw('custom parse error', 422);
+        ctx.throw(422, 'custom parse error');
       }
     });
 
@@ -293,6 +305,7 @@ describe('test/middleware.test.js', function () {
       });
       app.use(bodyParser());
       app.use(function *() {
+        (undefined === this.request.rawBody).should.equal(true);
         this.body = this.request.body ? 'parsed' : 'empty';
       });
       request(app.listen())

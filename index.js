@@ -38,6 +38,9 @@ module.exports = function (opts) {
   opts.detectJSON = undefined;
   opts.onerror = undefined;
 
+  // force co-body return raw body
+  opts.returnRawBody = true;
+
   // default json types
   var jsonTypes = [
     'application/json',
@@ -70,7 +73,9 @@ module.exports = function (opts) {
     if (this.request.body !== undefined) return yield next;
     if (this.disableBodyParser) return yield next;
     try {
-      this.request.body = yield parseBody(this);
+      var res = yield parseBody(this);
+      this.request.body = 'parsed' in res ? res.parsed : {};
+      if (this.request.rawBody === undefined) this.request.rawBody = res.raw;
     } catch (err) {
       if (onerror) {
         onerror(err, this);

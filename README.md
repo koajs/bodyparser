@@ -91,14 +91,12 @@ app.use(function* disableBodyParser(next) {
 });
 app.use(bodyparser());
 ```
+## Raw Body
 
-## Koa 2 Support
+You can access raw request body by `this.request.rawBody` after `koa-bodyparser` when:
 
-To use `koa-bodyparser` with koa@2, please use
-
-```bash
-npm install koa-bodyparser@next --save
-```
+1. `koa-bodyparser` parsed the request body.
+2. `this.request.rawBody` is not present before `koa-bodyparser`.
 
 ## Licences
 
