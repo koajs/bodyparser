@@ -93,10 +93,10 @@ app.use(bodyparser());
 ```
 ## Raw Body
 
-You can access raw request body by `ctx.request.rawBody` after `koa-bodyparser` when:
+You can access raw request body by `this.request.rawBody` after `koa-bodyparser` when:
 
 1. `koa-bodyparser` parsed the request body.
-2. `ctx.request.rawBody` is not present before `koa-bodyparser`.
+2. `this.request.rawBody` is not present before `koa-bodyparser`.
 
 ## Licences
 
