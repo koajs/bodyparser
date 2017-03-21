@@ -92,6 +92,13 @@ app.use(async (ctx, next) => {
 app.use(bodyparser());
 ```
 
+## Raw Body
+
+You can access raw request body by `ctx.request.rawBody` after `koa-bodyparser` when:
+
+1. `koa-bodyparser` parsed the request body.
+2. `ctx.request.rawBody` is not present before `koa-bodyparser`.
+
 ## Koa 1 Support
 
 To use `koa-bodyparser` with koa@1, please use [bodyparser 2.x](https://github.com/koajs/bodyparser/tree/2.x).
