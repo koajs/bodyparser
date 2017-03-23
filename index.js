@@ -88,13 +88,13 @@ module.exports = function (opts) {
 
   async function parseBody(ctx) {
     if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
-      return await parse.json(ctx, jsonOpts);
+      return await parse.json(ctx, Object.assign({}, jsonOpts));
     }
     if (enableForm && ctx.request.is(formTypes)) {
-      return await parse.form(ctx, formOpts);
+      return await parse.form(ctx, Object.assign({}, formOpts));
     }
     if (enableText && ctx.request.is(textTypes)) {
-      return await parse.text(ctx, textOpts) || '';
+      return await parse.text(ctx, Object.assign({}, textOpts)) || '';
     }
     return {};
   }
