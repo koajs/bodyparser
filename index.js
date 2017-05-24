@@ -96,7 +96,9 @@ module.exports = function (opts) {
     if (enableText && ctx.request.is(textTypes)) {
       return await parse.text(ctx, textOpts) || '';
     }
-    return {};
+    return {
+      msg: "no enableTypes matched in koa-bodyparser module! please check settings.enableTypes"
+    };
   }
 };
 
