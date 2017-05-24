@@ -47,6 +47,7 @@ app.use(async ctx => {
 ## Options
 
 * **enableTypes**: parser will only parse when request type hits enableTypes, default is `['json', 'form']`.
+* **notMetchedData**: when contentType not match in enableTypes, will return notMetchedData. Default is `{msg: "no enableTypes matched in koa-bodyparser module! please check settings.enableTypes"}`.
 * **encode**: requested encoding. Default is `utf-8` by `co-body`.
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`.
 * **jsonLimit**: limit of the `json` body. Default is `1mb`.

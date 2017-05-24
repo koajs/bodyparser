@@ -30,6 +30,9 @@ module.exports = function (opts) {
   var detectJSON = opts.detectJSON;
   var onerror = opts.onerror;
 
+  var notMetchedData = opts.notMetchedData || {
+    msg: "no enableTypes matched in koa-bodyparser module! please check settings.enableTypes"
+  };
   var enableTypes = opts.enableTypes || ['json', 'form'];
   var enableForm = checkEnable(enableTypes, 'form');
   var enableJson = checkEnable(enableTypes, 'json');
@@ -96,7 +99,7 @@ module.exports = function (opts) {
     if (enableText && ctx.request.is(textTypes)) {
       return await parse.text(ctx, textOpts) || '';
     }
-    return {};
+    return notMetchedData;
   }
 };
 
