@@ -56,6 +56,7 @@ module.exports = function (opts) {
 
   // default text types
   var textTypes = [
+    'application/jwt',
     'text/plain',
   ];
 

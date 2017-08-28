@@ -208,6 +208,22 @@ describe('test/middleware.test.js', function () {
       .send('body')
       .expect({}, done);
     });
+
+    it('should parse application/jwt body contents', function (done) {
+      var app = App({
+        enableTypes: ['text', 'json'],
+      });
+      app.use(async (ctx) => {
+        ctx.request.body.should.equal('body');
+        ctx.request.rawBody.should.equal('body');
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('application/jwt')
+      .send('body')
+      .expect('body', done);
+    })
   });
 
   describe('extent type', function () {
