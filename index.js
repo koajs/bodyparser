@@ -119,5 +119,5 @@ function extendType(original, extend) {
 }
 
 function checkEnable(types, type) {
-  return types.indexOf(type) >= 0;
+  return types.includes(type);
 }
