@@ -6,6 +6,7 @@
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
  *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
+ *   sethb0 <sethb@pobox.com>
  */
 
 'use strict';
@@ -69,34 +70,39 @@ module.exports = function (opts) {
   extendType(formTypes, extendTypes.form);
   extendType(textTypes, extendTypes.text);
 
-  return async function bodyParser(ctx, next) {
-    if (ctx.request.body !== undefined) return await next();
-    if (ctx.disableBodyParser) return await next();
-    try {
-      const res = await parseBody(ctx);
-      ctx.request.body = 'parsed' in res ? res.parsed : {};
-      if (ctx.request.rawBody === undefined) ctx.request.rawBody = res.raw;
-    } catch (err) {
-      if (onerror) {
-        onerror(err, ctx);
-      } else {
-        throw err;
-      }
-    }
-    await next();
+  return function bodyParser(ctx, next) {
+    if (ctx.request.body !== undefined) return next();
+    if (ctx.disableBodyParser) return next();
+    return parseBody(ctx)
+      .catch((err) => {
+        if (onerror) {
+          onerror(err, ctx);
+          return Promise.resolve();
+        }
+        return Promise.reject(err);
+      })
+      .then((res) => {
+        ctx.request.body = 'parsed' in res ? res.parsed : {};
+        if (ctx.request.rawBody === undefined) ctx.request.rawBody = res.raw;
+      })
+      .then(() => next());
   };
 
-  async function parseBody(ctx) {
-    if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
-      return await parse.json(ctx, jsonOpts);
+  function parseBody(ctx) {
+    try {
+      if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
+        return parse.json(ctx, jsonOpts);
+      }
+      if (enableForm && ctx.request.is(formTypes)) {
+        return parse.form(ctx, formOpts);
+      }
+      if (enableText && ctx.request.is(textTypes)) {
+        return parse.text(ctx, textOpts) || '';
+      }
+      return Promise.resolve({});
+    } catch (err) {
+      return Promise.reject(err);
     }
-    if (enableForm && ctx.request.is(formTypes)) {
-      return await parse.form(ctx, formOpts);
-    }
-    if (enableText && ctx.request.is(textTypes)) {
-      return await parse.text(ctx, textOpts) || '';
-    }
-    return {};
   }
 };
 

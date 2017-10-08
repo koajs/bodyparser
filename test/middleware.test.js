@@ -7,6 +7,7 @@
  * Authors:
  *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
  *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
+ *   sethb0 <sethb@pobox.com>
  */
 
 "use strict";
@@ -280,7 +281,7 @@ describe('test/middleware.test.js', function () {
   describe('onerror', function () {
     var app = App({
       onerror: function (err, ctx) {
-        ctx.throw('custom parse error', 422);
+        ctx.throw(422, 'custom parse error');
       }
     });
 
