@@ -1,4 +1,11 @@
 
+4.2.1 / 2017-10-07
+==================
+
+  * refactor: avoid async keyword
+  * fix: update example.js for koa@2
+  * fix: onerror test used deprecated calling convention
+
 4.2.0 / 2017-03-21
 ==================
 
