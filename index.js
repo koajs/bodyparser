@@ -83,7 +83,7 @@ module.exports = function (opts) {
         throw err;
       }
     }
-    await next();
+    return next();
   };
 
   async function parseBody(ctx) {
