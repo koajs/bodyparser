@@ -47,7 +47,7 @@ app.use(async ctx => {
 ## Options
 
 * **enableTypes**: parser will only parse when request type hits enableTypes, default is `['json', 'form']`.
-* **encode**: requested encoding. Default is `utf-8` by `co-body`.
+* **encoding**: requested encoding. Default is `utf-8` by `co-body`.
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`.
 * **jsonLimit**: limit of the `json` body. Default is `1mb`.
 * **textLimit**: limit of the `text` body. Default is `1mb`.
