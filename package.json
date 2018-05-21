@@ -35,10 +35,10 @@
     "supertest": "^3.0.0"
   },
   "dependencies": {
-    "co-body": "^5.1.0",
+    "co-body": "^6.0.0",
     "copy-to": "^2.0.1"
   },
   "engines": {
-    "node": ">=7.6"
+    "node": ">=8.0.0"
   }
 }
