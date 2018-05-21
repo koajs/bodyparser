@@ -1,4 +1,12 @@
 
+4.2.1 / 2018-05-21
+==================
+
+**others**
+  * [[`b270d5d`](http://github.com/koajs/bodyparser/commit/b270d5d138662f41dc63527505ea02dea0c1e7e8)] - deps: upgrade co-body (#104) (Haoliang Gao <<sakura9515@gmail.com>>)
+  * [[`d234345`](http://github.com/koajs/bodyparser/commit/d234345ffa2dadbab2ef0ce970fb8a58059e5f47)] - docs(readme): update opts encode -> encoding (#103) (Matthew Scragg <<scragg@gmail.com>>)
+  * [[`db193f5`](http://github.com/koajs/bodyparser/commit/db193f5d46860393521ad38f90a554968b2ba98a)] - chore:replace indexOf with includes (#90) (coderzzp <<coderzzp@gmail.com>>)
+
 4.2.0 / 2017-03-21
 ==================
 
