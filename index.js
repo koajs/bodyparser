@@ -74,7 +74,7 @@ module.exports = function (opts) {
     if (ctx.disableBodyParser) return await next();
     try {
       const res = await parseBody(ctx);
-      ctx.request.body = 'parsed' in res ? res.parsed : {};
+      ctx.request[opts.customBodyFieldName || 'body'] = 'parsed' in res ? res.parsed : {};
       if (ctx.request.rawBody === undefined) ctx.request.rawBody = res.raw;
     } catch (err) {
       if (onerror) {
