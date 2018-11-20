@@ -22,7 +22,7 @@ koa-bodyparser
 [gittip-url]: https://www.gittip.com/dead-horse/
 
 
-A body parser for koa, base on [co-body](https://github.com/tj/co-body). support `json`, `form` and `text` type body.
+A body parser for koa, based on [co-body](https://github.com/tj/co-body). support `json`, `form` and `text` type body.
 
 ## Install
 
