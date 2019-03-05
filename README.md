@@ -24,6 +24,8 @@ koa-bodyparser
 
 A body parser for koa, based on [co-body](https://github.com/tj/co-body). support `json`, `form` and `text` type body.
 
+> Notice: this module don't support parsing multipart format data, please use [co-busboy](https://github.com/cojs/busboy) to parse multipart format data.
+
 ## Install
 
 [![NPM](https://nodei.co/npm/koa-bodyparser.png?downloads=true)](https://nodei.co/npm/koa-bodyparser/)
