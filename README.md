@@ -57,7 +57,7 @@ app.use(async ctx => {
 * **detectJSON**: custom json request detect function. Default is `null`.
 
   ```js
-  app.use(bodyparser({
+  app.use(bodyParser({
     detectJSON: function (ctx) {
       return /\.json$/i.test(ctx.path);
     }
@@ -67,7 +67,7 @@ app.use(async ctx => {
 * **extendTypes**: support extend types:
 
   ```js
-  app.use(bodyparser({
+  app.use(bodyParser({
     extendTypes: {
       json: ['application/x-javascript'] // will parse application/x-javascript type body as a JSON string
     }
@@ -77,7 +77,7 @@ app.use(async ctx => {
 * **onerror**: support custom error handle, if `koa-bodyparser` throw an error, you can customize the response like:
 
   ```js
-  app.use(bodyparser({
+  app.use(bodyParser({
     onerror: function (err, ctx) {
       ctx.throw('body parse error', 422);
     }
