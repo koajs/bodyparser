@@ -36,7 +36,8 @@
   },
   "dependencies": {
     "co-body": "^6.0.0",
-    "copy-to": "^2.0.1"
+    "copy-to": "^2.0.1",
+    "xml2js": "^0.4.22"
   },
   "engines": {
     "node": ">=8.0.0"

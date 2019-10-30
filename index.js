@@ -16,7 +16,7 @@
 
 var parse = require('co-body');
 var copy = require('copy-to');
-
+var xmlParser = require('xml2js').parseStringPromise;
 /**
  * @param [Object] opts
  *   - {String} jsonLimit default '1mb'
@@ -25,7 +25,7 @@ var copy = require('copy-to');
  *   - {Object} extendTypes
  */
 
-module.exports = function (opts) {
+module.exports = function(opts) {
   opts = opts || {};
   var detectJSON = opts.detectJSON;
   var onerror = opts.onerror;
@@ -34,6 +34,7 @@ module.exports = function (opts) {
   var enableForm = checkEnable(enableTypes, 'form');
   var enableJson = checkEnable(enableTypes, 'json');
   var enableText = checkEnable(enableTypes, 'text');
+  var enableXml = checkEnable(enableTypes, 'xml');
 
   opts.detectJSON = undefined;
   opts.onerror = undefined;
@@ -58,6 +59,12 @@ module.exports = function (opts) {
   var textTypes = [
     'text/plain',
   ];
+
+  // default xml formTypes
+  var xmlTypes = [
+    'application/xml',
+    'text/xml'
+  ]
 
   var jsonOpts = formatOptions(opts, 'json');
   var formOpts = formatOptions(opts, 'form');
@@ -96,6 +103,15 @@ module.exports = function (opts) {
     if (enableText && ctx.request.is(textTypes)) {
       return await parse.text(ctx, textOpts) || '';
     }
+    if (enableXml && ctx.request.is(xmlTypes)) {
+      var res = await parse.text(ctx, textOpts) || '';
+      var xml2Object = await xmlParser(res.raw);
+      return {
+        parsed: xml2Object,
+        raw: res.raw
+      };
+
+    }
     return {};
   }
 };
@@ -112,7 +128,7 @@ function extendType(original, extend) {
     if (!Array.isArray(extend)) {
       extend = [extend];
     }
-    extend.forEach(function (extend) {
+    extend.forEach(function(extend) {
       original.push(extend);
     });
   }
