@@ -210,6 +210,41 @@ describe('test/middleware.test.js', function () {
     });
   });
 
+  describe('defaultAsText', function () {
+    it('should parse as Text', function (done) {
+      var app = App({
+        defaultAsText: true,
+      });
+      app.use(async (ctx) => {
+        ctx.headers['content-type'].should.equal('');
+        ctx.request.body.should.equal('body');
+        ctx.request.rawBody.should.equal('body');
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+        .post('/')
+        .send('body')
+        .set('content-type', '')
+        .type('')
+        .expect('body', done);
+    });
+
+    it('should not parse', function (done) {
+      var app = App();
+      app.use(async (ctx) => {
+        ctx.headers[ 'content-type' ].should.equal('');
+        ctx.request.body.should.eql({});
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+        .post('/')
+        .send('body')
+        .set('content-type', '')
+        .type('')
+        .expect({}, done);
+    });
+  });
+
   describe('extent type', function () {
     it('should extent json ok', function (done) {
       var app = App({

@@ -29,6 +29,7 @@ module.exports = function (opts) {
   opts = opts || {};
   var detectJSON = opts.detectJSON;
   var onerror = opts.onerror;
+  var defaultAsText = opts.defaultAsText;
 
   var enableTypes = opts.enableTypes || ['json', 'form'];
   var enableForm = checkEnable(enableTypes, 'form');
@@ -37,6 +38,7 @@ module.exports = function (opts) {
 
   opts.detectJSON = undefined;
   opts.onerror = undefined;
+  opts.defaultAsText = undefined;
 
   // force co-body return raw body
   opts.returnRawBody = true;
@@ -94,6 +96,9 @@ module.exports = function (opts) {
       return await parse.form(ctx, formOpts);
     }
     if (enableText && ctx.request.is(textTypes)) {
+      return await parse.text(ctx, textOpts) || '';
+    }
+    if (defaultAsText && !ctx.get('content-type')) {
       return await parse.text(ctx, textOpts) || '';
     }
     return {};

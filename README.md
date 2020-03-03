@@ -55,6 +55,7 @@ app.use(async ctx => {
 * **textLimit**: limit of the `text` body. Default is `1mb`.
 * **strict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `ctx.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
 * **detectJSON**: custom json request detect function. Default is `null`.
+* **defaultAsText**: treat as `text` when `Content-Type` is unset. Default is `false`.
 
   ```js
   app.use(bodyparser({
