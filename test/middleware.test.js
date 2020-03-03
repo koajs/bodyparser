@@ -210,43 +210,56 @@ describe('test/middleware.test.js', function () {
     });
   });
 
-  describe('defaultAsText', function () {
-    it('should parse as Text', function (done) {
+  describe('xml body', function () {
+    it('should parse xml body ok', function (done) {
       var app = App({
-        defaultAsText: true,
+        enableTypes: ['xml'],
       });
       app.use(async (ctx) => {
-        ctx.headers['content-type'].should.equal('');
-        ctx.request.body.should.equal('body');
-        ctx.request.rawBody.should.equal('body');
+        ctx.headers['content-type'].should.equal('application/xml');
+        ctx.request.body.should.equal('<xml>abc</xml>');
+        ctx.request.rawBody.should.equal('<xml>abc</xml>');
         ctx.body = ctx.request.body;
       });
       request(app.listen())
-        .post('/')
-        .send('body')
-        .set('content-type', '')
-        .type('')
-        .expect('body', done);
+      .post('/')
+      .type('xml')
+      .send('<xml>abc</xml>')
+      .expect('<xml>abc</xml>', done);
     });
 
-    it('should not parse', function (done) {
+    it('should not parse text body when disable', function (done) {
       var app = App();
       app.use(async (ctx) => {
-        ctx.headers[ 'content-type' ].should.equal('');
-        ctx.request.body.should.eql({});
+        ctx.headers['content-type'].should.equal('application/xml');
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('xml')
+      .send('<xml>abc</xml>')
+      .expect({}, done);
+    });
+
+    it('should xml body reach the limit size', function (done) {
+      var app = App({
+        enableTypes: ['xml'],
+        xmlLimit: 10,
+      });
+      app.use(async (ctx) => {
+        ctx.headers['content-type'].should.equal('application/xml');
         ctx.body = ctx.request.body;
       });
       request(app.listen())
         .post('/')
-        .send('body')
-        .set('content-type', '')
-        .type('')
-        .expect({}, done);
+        .type('xml')
+        .send('<xml>abcdefghijklmn</xml>')
+        .expect(413, done);
     });
   });
 
-  describe('extent type', function () {
-    it('should extent json ok', function (done) {
+  describe('extend type', function () {
+    it('should extend json ok', function (done) {
       var app = App({
         extendTypes: {
           json: 'application/x-javascript'
@@ -263,7 +276,7 @@ describe('test/middleware.test.js', function () {
         .expect({ foo: 'bar' }, done);
     });
 
-    it('should extent json with array ok', function (done) {
+    it('should extend json with array ok', function (done) {
       var app = App({
         extendTypes: {
           json: ['application/x-javascript', 'application/y-javascript']
@@ -278,6 +291,24 @@ describe('test/middleware.test.js', function () {
         .type('application/x-javascript')
         .send(JSON.stringify({ foo: 'bar' }))
         .expect({ foo: 'bar' }, done);
+    });
+
+    it('should extend xml ok', function (done) {
+      var app = App({
+        enableTypes: ['xml'],
+        extendTypes: {
+          xml: 'application/xml-custom'
+        }
+      });
+      app.use(async (ctx) => {
+        ctx.body = ctx.request.body;
+      });
+
+      request(app.listen())
+        .post('/')
+        .type('application/xml-custom')
+        .send('<xml>abc</xml>')
+        .expect('<xml>abc</xml>', done);
     });
   });
 
