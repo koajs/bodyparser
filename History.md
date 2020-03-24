@@ -1,4 +1,14 @@
 
+4.3.0 / 2020-03-24
+==================
+
+**features**
+  * [[`705673d`](http://github.com/koajs/bodyparser/commit/705673d634818727dbdb25ee999560970bd268a2)] - feat: support xml (#131) (TZ | 天猪 <<atian25@qq.com>>)
+
+**others**
+  * [[`6fd7e9c`](http://github.com/koajs/bodyparser/commit/6fd7e9c321684adc239d2afb270782c21d0b6231)] - docs: add multipart tips (dead-horse <<dead_horse@qq.com>>)
+  * [[`57c0022`](http://github.com/koajs/bodyparser/commit/57c00225d54b5b5dd1a7526478ad3eae8495222f)] - Fix typo in README.md (#112) (Adrian Pascu <<1521321+adipascu@users.noreply.github.com>>)
+
 4.2.1 / 2018-05-21
 ==================
 
