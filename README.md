@@ -48,11 +48,12 @@ app.use(async ctx => {
 
 ## Options
 
-* **enableTypes**: parser will only parse when request type hits enableTypes, default is `['json', 'form']`.
+* **enableTypes**: parser will only parse when request type hits enableTypes, support `json/form/text/xml`, default is `['json', 'form']`.
 * **encoding**: requested encoding. Default is `utf-8` by `co-body`.
 * **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`.
 * **jsonLimit**: limit of the `json` body. Default is `1mb`.
 * **textLimit**: limit of the `text` body. Default is `1mb`.
+* **xmlLimit**: limit of the `xml` body. Default is `1mb`.
 * **strict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `ctx.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
 * **detectJSON**: custom json request detect function. Default is `null`.
 

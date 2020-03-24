@@ -34,6 +34,7 @@ module.exports = function (opts) {
   var enableForm = checkEnable(enableTypes, 'form');
   var enableJson = checkEnable(enableTypes, 'json');
   var enableText = checkEnable(enableTypes, 'text');
+  var enableXml = checkEnable(enableTypes, 'xml');
 
   opts.detectJSON = undefined;
   opts.onerror = undefined;
@@ -59,15 +60,23 @@ module.exports = function (opts) {
     'text/plain',
   ];
 
+  // default xml types
+  var xmlTypes = [
+    'text/xml',
+    'application/xml',
+  ];
+
   var jsonOpts = formatOptions(opts, 'json');
   var formOpts = formatOptions(opts, 'form');
   var textOpts = formatOptions(opts, 'text');
+  var xmlOpts = formatOptions(opts, 'xml');
 
   var extendTypes = opts.extendTypes || {};
 
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
   extendType(textTypes, extendTypes.text);
+  extendType(xmlTypes, extendTypes.xml);
 
   return async function bodyParser(ctx, next) {
     if (ctx.request.body !== undefined) return await next();
@@ -95,6 +104,9 @@ module.exports = function (opts) {
     }
     if (enableText && ctx.request.is(textTypes)) {
       return await parse.text(ctx, textOpts) || '';
+    }
+    if (enableXml && ctx.request.is(xmlTypes)) {
+      return await parse.text(ctx, xmlOpts) || '';
     }
     return {};
   }
