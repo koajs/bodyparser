@@ -87,13 +87,13 @@ app.use(async ctx => {
 
 * **disableBodyParser**: you can dynamic disable body parser by set `ctx.disableBodyParser = true`.
 
-```js
-app.use(async (ctx, next) => {
-  if (ctx.path === '/disable') ctx.disableBodyParser = true;
-  await next();
-});
-app.use(bodyparser());
-```
+  ```js
+  app.use(async (ctx, next) => {
+    if (ctx.path === '/disable') ctx.disableBodyParser = true;
+    await next();
+  });
+  app.use(bodyParser());
+  ```
 
 ## Raw Body
 
