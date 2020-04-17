@@ -9,7 +9,7 @@ koa-bodyparser
 [![Gittip][gittip-image]][gittip-url]
 
 [npm-image]: https://img.shields.io/npm/v/koa-bodyparser.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/koa-bodyparser
+[npm-url]: https://npmjs.com/package/koa-bodyparser
 [travis-image]: https://img.shields.io/travis/koajs/bodyparser.svg?style=flat-square
 [travis-url]: https://travis-ci.org/koajs/bodyparser
 [coveralls-image]: https://img.shields.io/coveralls/koajs/bodyparser.svg?style=flat-square
