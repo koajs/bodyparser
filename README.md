@@ -1,12 +1,11 @@
-koa-bodyparser
-===============
+# [**koa-bodyparser**](https://github.com/koajs/bodyparser)
+
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
 [![Coveralls][coveralls-image]][coveralls-url]
 [![David deps][david-image]][david-url]
 [![node version][node-image]][node-url]
-[![Gittip][gittip-image]][gittip-url]
 
 [npm-image]: https://img.shields.io/npm/v/koa-bodyparser.svg?style=flat-square
 [npm-url]: https://npmjs.com/package/koa-bodyparser
@@ -16,11 +15,8 @@ koa-bodyparser
 [coveralls-url]: https://coveralls.io/r/koajs/bodyparser?branch=master
 [david-image]: https://img.shields.io/david/koajs/bodyparser.svg?style=flat-square
 [david-url]: https://david-dm.org/koajs/bodyparser
-[node-image]: https://img.shields.io/badge/node.js-%3E=_7.6-green.svg?style=flat-square
+[node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
-[gittip-image]: https://img.shields.io/gittip/dead-horse.svg?style=flat-square
-[gittip-url]: https://www.gittip.com/dead-horse/
-
 
 A body parser for koa, based on [co-body](https://github.com/tj/co-body). support `json`, `form` and `text` type body.
 
@@ -33,10 +29,10 @@ A body parser for koa, based on [co-body](https://github.com/tj/co-body). suppor
 ## Usage
 
 ```js
-var Koa = require('koa');
-var bodyParser = require('koa-bodyparser');
+const Koa = require('koa');
+const bodyParser = require('koa-bodyparser');
 
-var app = new Koa();
+const app = new Koa();
 app.use(bodyParser());
 
 app.use(async ctx => {
@@ -110,6 +106,6 @@ To use `koa-bodyparser` with koa@1, please use [bodyparser 2.x](https://github.c
 npm install koa-bodyparser@2 --save
 ```
 
-## Licences
-
+#### Licences
+---
 [MIT](LICENSE)
