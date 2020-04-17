@@ -1,4 +1,4 @@
-/**!
+/** !
  * koa-body-parser - index.js
  * Copyright(c) 2014
  * MIT Licensed
@@ -14,8 +14,8 @@
  * Module dependencies.
  */
 
-var parse = require('co-body');
-var copy = require('copy-to');
+const parse = require('co-body');
+const copy = require('copy-to');
 
 /**
  * @param [Object] opts
@@ -25,62 +25,61 @@ var copy = require('copy-to');
  *   - {Object} extendTypes
  */
 
-module.exports = function (opts) {
+module.exports = function(opts) {
   opts = opts || {};
-  var detectJSON = opts.detectJSON;
-  var onerror = opts.onerror;
+  const {detectJSON} = opts;
+  const {onerror} = opts;
 
-  var enableTypes = opts.enableTypes || ['json', 'form'];
-  var enableForm = checkEnable(enableTypes, 'form');
-  var enableJson = checkEnable(enableTypes, 'json');
-  var enableText = checkEnable(enableTypes, 'text');
-  var enableXml = checkEnable(enableTypes, 'xml');
+  const enableTypes = opts.enableTypes || ['json', 'form'];
+  const enableForm = checkEnable(enableTypes, 'form');
+  const enableJson = checkEnable(enableTypes, 'json');
+  const enableText = checkEnable(enableTypes, 'text');
+  const enableXml = checkEnable(enableTypes, 'xml');
+  const enableHtml = checkEnable(enableTypes, 'html');
 
   opts.detectJSON = undefined;
-  opts.onerror = undefined;
+  opts.onerror = undefined; // eslint-disable-line unicorn/prefer-add-event-listener
 
   // force co-body return raw body
   opts.returnRawBody = true;
 
   // default json types
-  var jsonTypes = [
+  const jsonTypes = [
     'application/json',
     'application/json-patch+json',
     'application/vnd.api+json',
-    'application/csp-report',
+    'application/csp-report'
   ];
 
   // default form types
-  var formTypes = [
-    'application/x-www-form-urlencoded',
-  ];
+  const formTypes = ['application/x-www-form-urlencoded'];
 
   // default text types
-  var textTypes = [
-    'text/plain',
-  ];
+  const textTypes = ['text/plain'];
 
   // default xml types
-  var xmlTypes = [
-    'text/xml',
-    'application/xml',
-  ];
+  const xmlTypes = ['text/xml', 'application/xml'];
 
-  var jsonOpts = formatOptions(opts, 'json');
-  var formOpts = formatOptions(opts, 'form');
-  var textOpts = formatOptions(opts, 'text');
-  var xmlOpts = formatOptions(opts, 'xml');
+  // default html types
+  const htmlTypes = ['text/html'];
 
-  var extendTypes = opts.extendTypes || {};
+  const jsonOpts = formatOptions(opts, 'json');
+  const formOpts = formatOptions(opts, 'form');
+  const textOpts = formatOptions(opts, 'text');
+  const xmlOpts = formatOptions(opts, 'xml');
+  const htmlOpts = formatOptions(opts, 'html');
+
+  const extendTypes = opts.extendTypes || {};
 
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
   extendType(textTypes, extendTypes.text);
   extendType(xmlTypes, extendTypes.xml);
 
+  // eslint-disable-next-line func-names
   return async function bodyParser(ctx, next) {
-    if (ctx.request.body !== undefined) return await next();
-    if (ctx.disableBodyParser) return await next();
+    if (ctx.request.body !== undefined || ctx.disableBodyParser)
+      return await next(); // eslint-disable-line no-return-await
     try {
       const res = await parseBody(ctx);
       ctx.request.body = 'parsed' in res ? res.parsed : {};
@@ -92,28 +91,40 @@ module.exports = function (opts) {
         throw err;
       }
     }
+
     await next();
   };
 
   async function parseBody(ctx) {
-    if (enableJson && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
-      return await parse.json(ctx, jsonOpts);
+    if (
+      enableJson &&
+      ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))
+    ) {
+      return await parse.json(ctx, jsonOpts); // eslint-disable-line no-return-await
     }
+
     if (enableForm && ctx.request.is(formTypes)) {
-      return await parse.form(ctx, formOpts);
+      return await parse.form(ctx, formOpts); // eslint-disable-line no-return-await
     }
+
     if (enableText && ctx.request.is(textTypes)) {
-      return await parse.text(ctx, textOpts) || '';
+      return (await parse.text(ctx, textOpts)) || '';
     }
+
     if (enableXml && ctx.request.is(xmlTypes)) {
-      return await parse.text(ctx, xmlOpts) || '';
+      return (await parse.text(ctx, xmlOpts)) || '';
     }
+
+    if (enableHtml && ctx.request.is(htmlTypes)) {
+      return (await parse.text(ctx, htmlOpts)) || '';
+    }
+
     return {};
   }
 };
 
 function formatOptions(opts, type) {
-  var res = {};
+  const res = {};
   copy(opts).to(res);
   res.limit = opts[type + 'Limit'];
   return res;
@@ -124,7 +135,8 @@ function extendType(original, extend) {
     if (!Array.isArray(extend)) {
       extend = [extend];
     }
-    extend.forEach(function (extend) {
+
+    extend.forEach(function(extend) {
       original.push(extend);
     });
   }

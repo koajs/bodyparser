@@ -1,12 +1,16 @@
-var koa = require('koa');
-var bodyParser = require('./');
+const Koa = require('koa');
+const bodyParser = require('.');
 
-var app = koa();
+const app = new Koa();
 app.use(bodyParser());
 
-app.use(function *() {
+app.use(async function() {
   // the parsed body will store in this.request.body
   this.body = this.request.body;
 });
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () =>
+  console.log(`Server ready at http://localhost:${PORT} 🚀 ..`)
+);
