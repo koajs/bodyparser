@@ -9,23 +9,22 @@
  *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
  */
 
-"use strict";
+'use strict';
 
 /**
  * Module dependencies.
  */
 
-var path = require('path');
-var request = require('supertest');
-var Koa = require('koa');
-var should = require('should');
-var bodyParser = require('../');
+const path = require('path');
+const request = require('supertest');
+const Koa = require('koa');
+const bodyParser = require('..');
 
-var fixtures = path.join(__dirname, 'fixtures');
+const fixtures = path.join(__dirname, 'fixtures');
 
 describe('test/middleware.test.js', function () {
   describe('json body', function () {
-    var app;
+    let app;
     beforeEach(function() {
       app = App();
     });
@@ -63,7 +62,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should parse json patch', function (done) {
-      var app = App();
+      let app = App();
       app.use(async (ctx) => {
         ctx.request.body.should.eql( [{op: 'add', path: '/foo', value: 'bar'}] );
         ctx.request.rawBody.should.equal('[{"op": "add", "path": "/foo", "value": "bar"}]');
@@ -77,7 +76,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body reach the limit size', function (done) {
-      var app = App({jsonLimit: 100});
+      let app = App({jsonLimit: 100});
       app.use(async (ctx) => {
         ctx.body = ctx.request.body;
       });
@@ -88,7 +87,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body error with string in strict mode', function (done) {
-      var app = App({jsonLimit: 100});
+      let app = App({jsonLimit: 100});
       app.use(async (ctx) => {
         ctx.request.rawBody.should.equal('"invalid"');
         ctx.body = ctx.request.body;
@@ -101,7 +100,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should json body ok with string not in strict mode', function (done) {
-      var app = App({jsonLimit: 100, strict: false});
+      let app = App({jsonLimit: 100, strict: false});
       app.use(async (ctx) => {
         ctx.request.rawBody.should.equal('"valid"');
         ctx.body = ctx.request.body;
@@ -116,7 +115,7 @@ describe('test/middleware.test.js', function () {
 
     describe('opts.detectJSON', function () {
       it('should parse json body on /foo.json request', function (done) {
-        var app = App({
+        let app = App({
           detectJSON: function (ctx) {
             return /\.json/i.test(ctx.path);
           }
@@ -135,7 +134,7 @@ describe('test/middleware.test.js', function () {
       });
 
       it('should not parse json body on /foo request', function (done) {
-        var app = App({
+        let app = App({
           detectJSON: function (ctx) {
             return /\.json/i.test(ctx.path);
           }
@@ -155,7 +154,7 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('form body', function () {
-    var app = App();
+    let app = App();
 
     it('should parse form body ok', function (done) {
       app.use(async (ctx) => {
@@ -171,7 +170,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should parse form body reach the limit size', function (done) {
-      var app = App({formLimit: 10});
+      let app = App({formLimit: 10});
       request(app.listen())
       .post('/')
       .type('form')
@@ -182,7 +181,7 @@ describe('test/middleware.test.js', function () {
 
   describe('text body', function () {
     it('should parse text body ok', function (done) {
-      var app = App({
+      let app = App({
         enableTypes: ['text', 'json'],
       });
       app.use(async (ctx) => {
@@ -198,7 +197,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should not parse text body when disable', function (done) {
-      var app = App();
+      let app = App();
       app.use(async (ctx) => {
         ctx.body = ctx.request.body;
       });
@@ -212,7 +211,7 @@ describe('test/middleware.test.js', function () {
 
   describe('xml body', function () {
     it('should parse xml body ok', function (done) {
-      var app = App({
+      let app = App({
         enableTypes: ['xml'],
       });
       app.use(async (ctx) => {
@@ -229,7 +228,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should not parse text body when disable', function (done) {
-      var app = App();
+      let app = App();
       app.use(async (ctx) => {
         ctx.headers['content-type'].should.equal('application/xml');
         ctx.body = ctx.request.body;
@@ -242,7 +241,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should xml body reach the limit size', function (done) {
-      var app = App({
+      let app = App({
         enableTypes: ['xml'],
         xmlLimit: 10,
       });
@@ -260,7 +259,7 @@ describe('test/middleware.test.js', function () {
 
   describe('extend type', function () {
     it('should extend json ok', function (done) {
-      var app = App({
+      let app = App({
         extendTypes: {
           json: 'application/x-javascript'
         }
@@ -277,7 +276,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should extend json with array ok', function (done) {
-      var app = App({
+      let app = App({
         extendTypes: {
           json: ['application/x-javascript', 'application/y-javascript']
         }
@@ -294,7 +293,7 @@ describe('test/middleware.test.js', function () {
     });
 
     it('should extend xml ok', function (done) {
-      var app = App({
+      let app = App({
         enableTypes: ['xml'],
         extendTypes: {
           xml: 'application/xml-custom'
@@ -314,7 +313,7 @@ describe('test/middleware.test.js', function () {
 
   describe('enableTypes', function () {
     it('should disable json success', function (done) {
-      var app = App({
+      let app = App({
         enableTypes: ['form'],
       });
 
@@ -330,7 +329,7 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('other type', function () {
-    var app = App();
+    let app = App();
 
     it('should get body null', function (done) {
       app.use(async (ctx) => {
@@ -344,7 +343,7 @@ describe('test/middleware.test.js', function () {
   });
 
   describe('onerror', function () {
-    var app = App({
+    let app = App({
       onerror: function (err, ctx) {
         ctx.throw('custom parse error', 422);
       }
@@ -364,7 +363,7 @@ describe('test/middleware.test.js', function () {
 
   describe('disableBodyParser', () => {
     it('should not parse body when disableBodyParser set to true', function (done) {
-      var app = new Koa();
+      let app = new Koa();
       app.use(async (ctx, next) => {
         ctx.disableBodyParser = true;
         await next();
@@ -385,7 +384,7 @@ describe('test/middleware.test.js', function () {
 });
 
 function App(options) {
-  var app = new Koa();
+  let app = new Koa();
   app.use(bodyParser(options));
   return app;
 }

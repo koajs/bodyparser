@@ -14,8 +14,8 @@
  * Module dependencies.
  */
 
-var parse = require('co-body');
-var copy = require('copy-to');
+const parse = require('co-body');
+const copy = require('copy-to');
 
 /**
  * @param [Object] opts
@@ -27,14 +27,14 @@ var copy = require('copy-to');
 
 module.exports = function (opts) {
   opts = opts || {};
-  var detectJSON = opts.detectJSON;
-  var onerror = opts.onerror;
+  const detectJSON = opts.detectJSON;
+  const onerror = opts.onerror;
 
-  var enableTypes = opts.enableTypes || ['json', 'form'];
-  var enableForm = checkEnable(enableTypes, 'form');
-  var enableJson = checkEnable(enableTypes, 'json');
-  var enableText = checkEnable(enableTypes, 'text');
-  var enableXml = checkEnable(enableTypes, 'xml');
+  const enableTypes = opts.enableTypes || ['json', 'form'];
+  const enableForm = checkEnable(enableTypes, 'form');
+  const enableJson = checkEnable(enableTypes, 'json');
+  const enableText = checkEnable(enableTypes, 'text');
+  const enableXml = checkEnable(enableTypes, 'xml');
 
   opts.detectJSON = undefined;
   opts.onerror = undefined;
@@ -42,8 +42,9 @@ module.exports = function (opts) {
   // force co-body return raw body
   opts.returnRawBody = true;
 
+
   // default json types
-  var jsonTypes = [
+  const jsonTypes = [
     'application/json',
     'application/json-patch+json',
     'application/vnd.api+json',
@@ -51,27 +52,27 @@ module.exports = function (opts) {
   ];
 
   // default form types
-  var formTypes = [
+  const formTypes = [
     'application/x-www-form-urlencoded',
   ];
 
   // default text types
-  var textTypes = [
+  const textTypes = [
     'text/plain',
   ];
 
   // default xml types
-  var xmlTypes = [
+  const xmlTypes = [
     'text/xml',
     'application/xml',
   ];
 
-  var jsonOpts = formatOptions(opts, 'json');
-  var formOpts = formatOptions(opts, 'form');
-  var textOpts = formatOptions(opts, 'text');
-  var xmlOpts = formatOptions(opts, 'xml');
+  const jsonOpts = formatOptions(opts, 'json');
+  const formOpts = formatOptions(opts, 'form');
+  const textOpts = formatOptions(opts, 'text');
+  const xmlOpts = formatOptions(opts, 'xml');
 
-  var extendTypes = opts.extendTypes || {};
+  const extendTypes = opts.extendTypes || {};
 
   extendType(jsonTypes, extendTypes.json);
   extendType(formTypes, extendTypes.form);
@@ -113,7 +114,7 @@ module.exports = function (opts) {
 };
 
 function formatOptions(opts, type) {
-  var res = {};
+  let res = {};
   copy(opts).to(res);
   res.limit = opts[type + 'Limit'];
   return res;
