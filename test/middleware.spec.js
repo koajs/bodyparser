@@ -259,6 +259,38 @@ describe('test/middleware.test.js', function() {
     });
   });
 
+  describe('html body', function () {
+    it('should parse html body ok', function (done) {
+      const app = App({
+        enableTypes: ['html'],
+      });
+      app.use(async (ctx) => {
+        ctx.headers['content-type'].should.equal('text/html');
+        ctx.request.body.should.equal('<h1>abc</h1>');
+        ctx.request.rawBody.should.equal('<h1>abc</h1>');
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('html')
+      .send('<h1>abc</h1>')
+      .expect('<h1>abc</h1>', done);
+    });
+
+    it('should not parse html body when disable', function (done) {
+      const app = App();
+      app.use(async (ctx) => {
+        ctx.headers['content-type'].should.equal('text/html');
+        ctx.body = ctx.request.body;
+      });
+      request(app.listen())
+      .post('/')
+      .type('html')
+      .send('<h1>abc</h1>')
+      .expect({}, done);
+    });
+  });
+
   describe('extend type', function() {
     it('should extend json ok', function(done) {
       const app = App({
