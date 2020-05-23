@@ -35,7 +35,6 @@ module.exports = function(opts) {
   const enableJson = checkEnable(enableTypes, 'json');
   const enableText = checkEnable(enableTypes, 'text');
   const enableXml = checkEnable(enableTypes, 'xml');
-  const enableHtml = checkEnable(enableTypes, 'html');
 
   opts.detectJSON = undefined;
   opts.onerror = undefined; // eslint-disable-line unicorn/prefer-add-event-listener
@@ -60,14 +59,10 @@ module.exports = function(opts) {
   // default xml types
   const xmlTypes = ['text/xml', 'application/xml'];
 
-  // default html types
-  const htmlTypes = ['text/html'];
-
   const jsonOpts = formatOptions(opts, 'json');
   const formOpts = formatOptions(opts, 'form');
   const textOpts = formatOptions(opts, 'text');
   const xmlOpts = formatOptions(opts, 'xml');
-  const htmlOpts = formatOptions(opts, 'html');
 
   const extendTypes = opts.extendTypes || {};
 
@@ -113,10 +108,6 @@ module.exports = function(opts) {
 
     if (enableXml && ctx.request.is(xmlTypes)) {
       return (await parse.text(ctx, xmlOpts)) || '';
-    }
-
-    if (enableHtml && ctx.request.is(htmlTypes)) {
-      return (await parse.text(ctx, htmlOpts)) || '';
     }
 
     return {};

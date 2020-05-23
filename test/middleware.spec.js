@@ -259,12 +259,16 @@ describe('test/middleware.test.js', function() {
     });
   });
 
-  describe('html body', function () {
+  describe('html body by text parser', function () {
     it('should parse html body ok', function (done) {
       const app = App({
-        enableTypes: ['html'],
+        extendTypes: {
+          text: ['text/html'],
+        },
+        enableTypes: ['text'],
       });
       app.use(async (ctx) => {
+        console.log(ctx.request.body);
         ctx.headers['content-type'].should.equal('text/html');
         ctx.request.body.should.equal('<h1>abc</h1>');
         ctx.request.rawBody.should.equal('<h1>abc</h1>');
