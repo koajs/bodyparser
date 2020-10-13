@@ -73,8 +73,10 @@ module.exports = function(opts) {
 
   // eslint-disable-next-line func-names
   return async function bodyParser(ctx, next) {
-    if (ctx.request.body !== undefined || ctx.disableBodyParser)
-      return await next(); // eslint-disable-line no-return-await
+    if (ctx.request.body !== undefined || ctx.disableBodyParser) {
+      return next();
+    }
+
     try {
       const res = await parseBody(ctx);
       ctx.request.body = 'parsed' in res ? res.parsed : {};
@@ -87,7 +89,7 @@ module.exports = function(opts) {
       }
     }
 
-    await next();
+    return next();
   };
 
   async function parseBody(ctx) {
@@ -95,11 +97,11 @@ module.exports = function(opts) {
       enableJson &&
       ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))
     ) {
-      return await parse.json(ctx, jsonOpts); // eslint-disable-line no-return-await
+      return parse.json(ctx, jsonOpts);
     }
 
     if (enableForm && ctx.request.is(formTypes)) {
-      return await parse.form(ctx, formOpts); // eslint-disable-line no-return-await
+      return parse.form(ctx, formOpts);
     }
 
     if (enableText && ctx.request.is(textTypes)) {
