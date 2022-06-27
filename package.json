@@ -31,17 +31,17 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "eslint-config-xo-lass": "^1.0.3",
-    "husky": "^4.2.5",
+    "eslint-config-xo-lass": "^2.0.1",
+    "husky": "^8.0.1",
     "koa": "^2",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.1",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "should": "^13.2.3",
-    "supertest": "^4.0.2",
-    "xo": "0.25.4"
+    "supertest": "^6.2.3",
+    "xo": "0.50.0"
   },
   "dependencies": {
-    "co-body": "^6.0.0",
+    "co-body": "^6.1.0",
     "copy-to": "^2.0.1"
   },
   "xo": {
@@ -61,7 +61,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=12"
   },
   "bugs": {
     "url": "https://github.com/koajs/body-parser/issues"

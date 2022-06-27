@@ -25,7 +25,7 @@ const copy = require('copy-to');
  *   - {Object} extendTypes
  */
 
-module.exports = function(opts) {
+module.exports = function (opts) {
   opts = opts || {};
   const {detectJSON} = opts;
   const {onerror} = opts;
@@ -47,7 +47,7 @@ module.exports = function(opts) {
     'application/json',
     'application/json-patch+json',
     'application/vnd.api+json',
-    'application/csp-report'
+    'application/csp-report',
   ];
 
   // default form types
@@ -127,9 +127,9 @@ function extendType(original, extend) {
       extend = [extend];
     }
 
-    extend.forEach(function(extend) {
-      original.push(extend);
-    });
+    for (const el of extend) {
+      original.push(el);
+    }
   }
 }
 
