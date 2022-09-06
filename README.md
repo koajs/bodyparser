@@ -76,7 +76,7 @@ app.use(async ctx => {
   ```js
   app.use(bodyParser({
     onerror: function (err, ctx) {
-      ctx.throw('body parse error', 422);
+      ctx.throw(422, 'body parse error');
     }
   }));
   ```
