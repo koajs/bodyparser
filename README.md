@@ -20,7 +20,7 @@
 
 A body parser for koa, based on [co-body](https://github.com/tj/co-body). support `json`, `form` and `text` type body.
 
-> Notice: this module don't support parsing multipart format data, please use [co-busboy](https://github.com/cojs/busboy) to parse multipart format data.
+> Notice: this module doesn't support parsing multipart format data, please use [`@koa/multer`](https://github.com/koajs/multer) to parse multipart format data.
 
 ## Install
 
