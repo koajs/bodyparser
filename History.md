@@ -1,4 +1,21 @@
 
+4.4.0 / 2023-03-15
+==================
+
+**features**
+  * [[`a9a6476`](http://github.com/koajs/bodyparser/commit/a9a647641bb883746c9691e86b8f87739df4e374)] - feat: Support scim json format (#151) (ask me anything :) <<caryyu.tg@gmail.com>>)
+
+**fixes**
+  * [[`4d931c6`](http://github.com/koajs/bodyparser/commit/4d931c634e9b59a843152f56d68b3ef2e1719675)] - fix: revert html parser, use text directly (dead-horse <<dead_horse@qq.com>>)
+
+**others**
+  * [[`c02ec0c`](http://github.com/koajs/bodyparser/commit/c02ec0c062f92e1114b4196534669367eae14ccc)] - Update README.md (#149) (sgywzy <<44345776+sgywzy@users.noreply.github.com>>)
+  * [[`85b426f`](http://github.com/koajs/bodyparser/commit/85b426fea3d98481fd4acbafce0857189199426e)] - Recommend @koa/multer for multipart/form-data (#145) (Jim Fisher <<jameshfisher@gmail.com>>)
+  * [[`afecb1a`](http://github.com/koajs/bodyparser/commit/afecb1ab7303ebd36d1a50d6bfe5fc3125759e43)] - Update Repo + Add Html Parser (#134) (imed jaberi <<imed_jebari@hotmail.fr>>)
+  * [[`ecc6ebf`](http://github.com/koajs/bodyparser/commit/ecc6ebfad7179e0009501723e7b2227d25c9603d)] - docs: fix broken npmjs link (#132) (Joel Colucci <<joelcolucci@users.noreply.github.com>>)
+  * [[`336b287`](http://github.com/koajs/bodyparser/commit/336b2879dc7c0e048d79e28bf23d4b8fe2589376)] - Update README.md (haoxin <<haoxinst@gmail.com>>)
+  * [[`e02cb7d`](http://github.com/koajs/bodyparser/commit/e02cb7dd2c798a116ef12c776da30c710697dea5)] - Update README.md (#125) (thaiworldgame <<36978149+thaiworldgame@users.noreply.github.com>>)
+
 4.3.0 / 2020-03-24
 ==================
 
