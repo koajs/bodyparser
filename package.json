@@ -1,67 +1,77 @@
 {
-  "name": "koa-bodyparser",
-  "version": "4.4.0",
-  "description": "a body parser for Koa",
-  "main": "index.js",
-  "scripts": {
-    "lint": "xo",
-    "lint:fix": "xo --fix",
-    "test": "mocha --require should test/*.spec.js --exit",
-    "coverage": "nyc npm run test --reporter=lcov",
-    "test-ci": "npm run lint && npm run coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/koajs/bodyparser.git"
+  "name": "@koa/bodyparser",
+  "version": "5.0.0",
+  "description": "Koa body parsing middleware",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   },
   "files": [
-    "index.js"
+    "dist"
   ],
+  "scripts": {
+    "build": "tsup",
+    "lint": "xo",
+    "lint:fix": "xo --fix",
+    "test": "jest --detectOpenHandles",
+    "test-ci": "npm run test --coverage"
+  },
   "keywords": [
+    "koa",
+    "body",
+    "request-body",
     "bodyParser",
     "json",
     "urlencoded",
-    "koa",
-    "body"
+    "text",
+    "xml"
   ],
   "author": {
     "name": "dead_horse",
     "email": "dead_horse@qq.com",
     "url": " http://deadhorse.me"
   },
+  "contributors": [
+    {
+      "name": "Imed Jaberi",
+      "email": "imed_jebari@hotmail.fr"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
-    "eslint-config-xo-lass": "^1.0.3",
-    "husky": "^4.2.5",
-    "koa": "^2",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.1",
-    "should": "^13.2.3",
-    "supertest": "^4.0.2",
-    "xo": "0.25.4"
+    "@types/co-body": "^6.1.0",
+    "@types/jest": "^29.5.0",
+    "@types/koa": "^2.13.6",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/node": "^18.15.11",
+    "@types/supertest": "^2.0.12",
+    "eslint-config-xo-lass": "^2.0.1",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "koa": "^2.14.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3",
+    "xo": "^0.53.1"
   },
   "dependencies": {
-    "co-body": "^6.0.0",
-    "copy-to": "^2.0.1"
-  },
-  "xo": {
-    "prettier": true,
-    "space": true,
-    "extends": [
-      "xo-lass"
-    ],
-    "rules": {
-      "node/no-deprecated-api": "off",
-      "no-unused-vars": "off",
-      "no-prototype-builtins": "off",
-      "prefer-rest-params": "off"
-    },
-    "ignores": [
-      "test/**"
-    ]
+    "co-body": "^6.1.0",
+    "lodash.merge": "^4.6.2"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">= 14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/koajs/bodyparser.git"
   },
   "bugs": {
     "url": "https://github.com/koajs/body-parser/issues"
