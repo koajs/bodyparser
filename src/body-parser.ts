@@ -33,7 +33,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
    */
   async function parseBody(ctx: Koa.Context) {
     const shouldParseBodyAs = (type: BodyType) =>
-      isEnabledBodyAs[type] && ctx.request.is(mimeTypes[type]);
+      Boolean(isEnabledBodyAs[type] && ctx.request.is(mimeTypes[type]));
     const bodyType =
       detectJSON?.(ctx) || shouldParseBodyAs('json')
         ? 'json'
