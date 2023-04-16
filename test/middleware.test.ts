@@ -118,7 +118,7 @@ describe("test/body-parser.test.ts", () => {
     });
 
     it("should json body ok with string not in strict mode", (done) => {
-      const app = createApp({ jsonLimit: 100, strict: false });
+      const app = createApp({ jsonLimit: 100, jsonStrict: false });
       app.use(async (ctx) => {
         expect(ctx.request.rawBody).toEqual('"valid"');
         ctx.body = ctx.request.body;
@@ -315,6 +315,45 @@ describe("test/body-parser.test.ts", () => {
     });
   });
 
+  describe("patchNode", () => {
+    it("should patch Node raw request with supported type", (done) => {
+      const app = createApp({ patchNode: true });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ foo: "bar" });
+        expect(ctx.request.rawBody).toEqual('{"foo":"bar"}');
+        expect(ctx.req.body).toEqual({ foo: "bar" });
+        expect(ctx.req.rawBody).toEqual('{"foo":"bar"}');
+
+        ctx.body = ctx.req.body;
+      });
+      server = app.listen();
+      request(server)
+        .post("/")
+        .send({ foo: "bar" })
+        .expect({ foo: "bar" }, done);
+    });
+
+    it("should patch Node raw request with unsupported type", (done) => {
+      const app = createApp({ patchNode: true });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({});
+        expect(ctx.request.rawBody).toEqual(undefined);
+        expect(ctx.req.body).toEqual({});
+        expect(ctx.req.rawBody).toEqual(undefined);
+
+        ctx.body = ctx.req.body;
+      });
+      server = app.listen();
+      request(server)
+        .post("/")
+        .type("application/x-unsupported-type")
+        .send("x-unsupported-type")
+        .expect({}, done);
+    });
+  });
+
   describe("extend type", () => {
     it("should extend json ok", (done) => {
       const app = createApp({
@@ -449,9 +488,9 @@ describe("test/body-parser.test.ts", () => {
     });
   });
 
-  describe("onerror", () => {
+  describe("onError", () => {
     const app = createApp({
-      onerror({}, ctx) {
+      onError({}, ctx) {
         ctx.throw("custom parse error", 422);
       },
     });

@@ -18,6 +18,7 @@ declare module 'http' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface IncomingMessage {
     body?: any;
+    rawBody: string;
   }
 }
 /**
@@ -26,10 +27,11 @@ declare module 'http' {
 export function bodyParserWrapper(opts: BodyParserOptions = {}) {
   const {
     detectJSON,
-    onerror,
+    onError,
     enableTypes = ['json', 'form'],
     extendTypes = {} as NonNullable<BodyParserOptions['extendTypes']>,
     enableRawChecking = false,
+    patchNode = false,
     ...restOpts
   } = opts;
   const isEnabledBodyAs = getIsEnabledBodyAs(enableTypes);
@@ -55,7 +57,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     const parserOptions = {
       // force co-body return raw body
       returnRawBody: true,
-      strict: restOpts.strict,
+      strict: shouldParseBodyAs('json') ? restOpts.jsonStrict : undefined,
       [`${bodyType}Types`]: mimeTypes[bodyType],
       limit: restOpts[`${shouldParseBodyAs('xml') ? 'xml' : bodyType}Limit`],
     };
@@ -66,7 +68,12 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
   }
 
   return async function (ctx: Koa.Context, next: Koa.Next) {
-    if (ctx.request.body !== undefined || ctx.disableBodyParser) return next();
+    if (
+      (patchNode && ctx.req.body !== undefined) ||
+      ctx.request.body !== undefined ||
+      ctx.disableBodyParser
+    )
+      return next();
     // raw request parsed and contain 'body' values and it's enabled to override the koa request
     if (enableRawChecking && ctx.req.body !== undefined) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -76,11 +83,18 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
 
     try {
       const response = await parseBody(ctx);
+      // patch node
+      if (patchNode) {
+        ctx.req.body = 'parsed' in response ? response.parsed : {};
+        if (ctx.req.rawBody === undefined) ctx.req.rawBody = response.raw;
+      }
+
+      // patch koa
       ctx.request.body = 'parsed' in response ? response.parsed : {};
       if (ctx.request.rawBody === undefined) ctx.request.rawBody = response.raw;
     } catch (err: unknown) {
-      if (!onerror) throw err;
-      onerror(err as Error, ctx);
+      if (!onError) throw err;
+      onError(err as Error, ctx);
     }
 
     return next();

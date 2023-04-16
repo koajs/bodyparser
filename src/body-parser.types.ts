@@ -9,15 +9,21 @@ export type BodyType = (typeof supportedBodyTypes)[number];
 
 export type BodyParserOptions = {
   /**
+   * Patch request body to Node's 'ctx.req'
+   * @default false
+   */
+  patchNode?: boolean;
+  /**
    * json detector function, can help to detect request json type based on custom logic
    */
   detectJSON?: (ctx: Koa.Context) => boolean;
   /**
    * error handler, can help to customize the response on error case
    */
-  onerror?: (error: Error, ctx: Koa.Context) => void;
+  onError?: (error: Error, ctx: Koa.Context) => void;
   /**
-   *  False to disable the raw request body checking to prevent koa request override
+   * false to disable the raw request body checking to prevent koa request override
+   * @default false
    */
   enableRawChecking?: boolean;
   /**
@@ -32,15 +38,22 @@ export type BodyParserOptions = {
     [K in BodyType]?: string[];
   };
   /**
-   * limit of the `urlencoded` body
-   * @default '56kb'
+   * When set to true, JSON parser will only accept arrays and objects.
+   * When false will accept anything JSON.parse accepts.
+   *
+   * @default true
    */
-  formLimit?: CoBodyOptions['limit'];
+  jsonStrict?: CoBodyOptions['strict'];
   /**
    * limit of the `json` body
    * @default '1mb'
    */
   jsonLimit?: CoBodyOptions['limit'];
+  /**
+   * limit of the `urlencoded` body
+   * @default '56kb'
+   */
+  formLimit?: CoBodyOptions['limit'];
   /**
    * limit of the `text` body
    * @default '1mb'
@@ -57,12 +70,5 @@ export type BodyParserOptions = {
    * requested encoding.
    * @default 'utf-8' by 'co-body'.
    */
-  | 'encoding'
-  /**
-   * When set to true, JSON parser will only accept arrays and objects.
-   * When false will accept anything JSON.parse accepts.
-   *
-   * @default true
-   */
-  | 'strict'
+  'encoding'
 >;

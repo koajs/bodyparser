@@ -5,6 +5,9 @@ import {
   type BodyType,
 } from './body-parser.types';
 
+/**
+ * UnsupportedBodyTypeError
+ */
 export class UnsupportedBodyTypeError extends Error {
   constructor(wrongType: string) {
     super();
@@ -61,6 +64,7 @@ export function getMimeTypes(
       'application/json-patch+json',
       'application/vnd.api+json',
       'application/csp-report',
+      'application/reports+json',
       'application/scim+json',
     ],
     // default form mime types

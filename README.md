@@ -45,13 +45,14 @@ app.use((ctx) => {
 
 ## Options
 
+- **patchNode**: patch request body to Node's `ctx.req`, default is `false`.
 - **enableTypes**: parser will only parse when request type hits enableTypes, support `json/form/text/xml`, default is `['json', 'form']`.
 - **encoding**: requested encoding. Default is `utf-8` by `co-body`.
 - **formLimit**: limit of the `urlencoded` body. If the body ends up being larger than this limit, a 413 error code is returned. Default is `56kb`.
 - **jsonLimit**: limit of the `json` body. Default is `1mb`.
 - **textLimit**: limit of the `text` body. Default is `1mb`.
 - **xmlLimit**: limit of the `xml` body. Default is `1mb`.
-- **strict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `ctx.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
+- **jsonStrict**: when set to true, JSON parser will only accept arrays and objects. Default is `true`. See [strict mode](https://github.com/cojs/co-body#options) in `co-body`. In strict mode, `ctx.request.body` will always be an object(or array), this avoid lots of type judging. But text body will always return string type.
 - **detectJSON**: custom json request detect function. Default is `null`.
 
   ```js
@@ -77,12 +78,12 @@ app.use((ctx) => {
   );
   ```
 
-- **onerror**: support custom error handle, if `koa-bodyparser` throw an error, you can customize the response like:
+- **onError**: support custom error handle, if `koa-bodyparser` throw an error, you can customize the response like:
 
   ```js
   app.use(
     bodyParser({
-      onerror(err, ctx) {
+      onError(err, ctx) {
         ctx.throw(422, "body parse error");
       },
     })
@@ -90,14 +91,6 @@ app.use((ctx) => {
   ```
 
 - **enableRawChecking**: support the already parsed body on the raw request by override and prioritize the parsed value over the sended payload. (default is `false`)
-
-```js
-app.use(
-  bodyParser({
-    enableRawChecking: true,
-  })
-);
-```
 
 - **disableBodyParser**: you can dynamic disable body parser by set `ctx.disableBodyParser = true`.
 
