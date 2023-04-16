@@ -43,12 +43,14 @@ export function getIsEnabledBodyAs(enableTypes: BodyType[]) {
 export function getMimeTypes(
   extendTypes: NonNullable<BodyParserOptions['extendTypes']>,
 ) {
-  for (const extendedType of Object.keys(extendTypes) as BodyType[]) {
+  for (const extendedTypeKey of Object.keys(extendTypes) as BodyType[]) {
+    const extendedType = extendTypes[extendedTypeKey];
+
     if (
-      !supportedBodyTypes.includes(extendedType) ||
-      !Array.isArray(extendTypes[extendedType])
+      !supportedBodyTypes.includes(extendedTypeKey) ||
+      !Array.isArray(extendedType)
     ) {
-      throw new UnsupportedBodyTypeError(extendedType);
+      throw new UnsupportedBodyTypeError(extendedTypeKey);
     }
   }
 

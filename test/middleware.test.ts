@@ -383,11 +383,23 @@ describe("test/body-parser.test.ts", () => {
       }
     });
 
-    it("should throw when pass supported type but with string value instead of array", () => {
+    it("should throw when pass supported types with string value instead of array", () => {
       try {
         createApp({
           extendTypes: {
             "any-other-type": "application/any-other-type",
+          } as any,
+        });
+      } catch (error) {
+        expect(error instanceof UnsupportedBodyTypeError).toBe(true);
+      }
+    });
+
+    it("should throw when pass supported types with array contain falsy values", () => {
+      try {
+        createApp({
+          extendTypes: {
+            json: ["", 0, false, null, undefined],
           } as any,
         });
       } catch (error) {
@@ -492,6 +504,7 @@ describe("test/body-parser.test.ts", () => {
         .send({ foo: "bar" })
         .expect(rawParsedBody, done);
     });
+
     it("shouldn't override koa request with raw request body if not exist and enableRawChecking is truthy", (done) => {
       const rawParsedBody = undefined;
       const app = createApp({ rawParsedBody, enableRawChecking: true });
