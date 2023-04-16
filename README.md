@@ -89,6 +89,16 @@ app.use((ctx) => {
   );
   ```
 
+- **enableRawChecking**: support the already parsed body on the raw request by override and prioritize the parsed value over the sended payload. (default is `false`)
+
+```js
+app.use(
+  bodyParser({
+    enableRawChecking: true,
+  })
+);
+```
+
 - **disableBodyParser**: you can dynamic disable body parser by set `ctx.disableBodyParser = true`.
 
   ```js

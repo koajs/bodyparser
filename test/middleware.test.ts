@@ -6,8 +6,21 @@ import type { BodyParserOptions } from "../src/body-parser.types";
 import { UnsupportedBodyTypeError } from "../src/body-parser.utils";
 
 const fixtures = path.join(__dirname, "fixtures");
-const createApp = (options?: BodyParserOptions) => {
+type CreateAppConfig = BodyParserOptions & {
+  rawParsedBody?: Record<string, string>;
+};
+
+const createApp = (config: CreateAppConfig = {}) => {
+  const { rawParsedBody, ...options } = config;
   const app = new Koa();
+  rawParsedBody &&
+    app.use((ctx, next) => {
+      ctx.req.body = rawParsedBody;
+      console.log("==== middelware ====", rawParsedBody);
+
+      return next();
+    });
+
   app.use(bodyParser(options));
   return app;
 };
@@ -462,6 +475,35 @@ describe("test/body-parser.test.ts", () => {
         .set("content-type", "application/json")
         .expect(200)
         .expect("empty", done);
+    });
+  });
+
+  describe("enableRawChecking", () => {
+    it("should override koa request with raw request body if exist and enableRawChecking is truthy", (done) => {
+      const rawParsedBody = { rawFoo: "rawBar" };
+      const app = createApp({ rawParsedBody, enableRawChecking: true });
+      app.use(async (ctx) => {
+        ctx.body = ctx.request.body;
+      });
+
+      server = app.listen();
+      request(server)
+        .post("/")
+        .send({ foo: "bar" })
+        .expect(rawParsedBody, done);
+    });
+    it("shouldn't override koa request with raw request body if not exist and enableRawChecking is truthy", (done) => {
+      const rawParsedBody = undefined;
+      const app = createApp({ rawParsedBody, enableRawChecking: true });
+      app.use(async (ctx) => {
+        ctx.body = ctx.request.body;
+      });
+
+      server = app.listen();
+      request(server)
+        .post("/")
+        .send({ foo: "bar" })
+        .expect({ foo: "bar" }, done);
     });
   });
 });

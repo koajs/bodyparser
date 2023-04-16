@@ -14,6 +14,12 @@ declare module 'koa' {
   }
 }
 
+declare module 'http' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface IncomingMessage {
+    body?: any;
+  }
+}
 /**
  * Middleware wrapper which delegate options to the core code
  */
@@ -23,6 +29,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     onerror,
     enableTypes = ['json', 'form'],
     extendTypes = {} as NonNullable<BodyParserOptions['extendTypes']>,
+    enableRawChecking = false,
     ...restOpts
   } = opts;
   const isEnabledBodyAs = getIsEnabledBodyAs(enableTypes);
@@ -60,6 +67,13 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
 
   return async function (ctx: Koa.Context, next: Koa.Next) {
     if (ctx.request.body !== undefined || ctx.disableBodyParser) return next();
+    // raw request parsed and contain 'body' values and it's enabled to override the koa request
+    if (enableRawChecking && ctx.req.body !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      ctx.request.body = ctx.req.body;
+      return next();
+    }
+
     try {
       const response = await parseBody(ctx);
       ctx.request.body = 'parsed' in response ? response.parsed : {};

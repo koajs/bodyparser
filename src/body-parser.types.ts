@@ -17,6 +17,10 @@ export type BodyParserOptions = {
    */
   onerror?: (error: Error, ctx: Koa.Context) => void;
   /**
+   *  False to disable the raw request body checking to prevent koa request override
+   */
+  enableRawChecking?: boolean;
+  /**
    * co-body parser will only parse when request type hits enableTypes
    * @default ['json', 'form']
    */
