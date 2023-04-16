@@ -1,29 +1,11 @@
 import path from "path";
 import request from "supertest";
 import Koa from "koa";
+
 import bodyParser from "../src";
-import type { BodyParserOptions } from "../src/body-parser.types";
 import { UnsupportedBodyTypeError } from "../src/body-parser.utils";
 
-const fixtures = path.join(__dirname, "fixtures");
-type CreateAppConfig = BodyParserOptions & {
-  rawParsedBody?: Record<string, string>;
-};
-
-const createApp = (config: CreateAppConfig = {}) => {
-  const { rawParsedBody, ...options } = config;
-  const app = new Koa();
-  rawParsedBody &&
-    app.use((ctx, next) => {
-      ctx.req.body = rawParsedBody;
-      console.log("==== middelware ====", rawParsedBody);
-
-      return next();
-    });
-
-  app.use(bodyParser(options));
-  return app;
-};
+import { createApp, fixtures } from "./test-utils";
 
 describe("test/body-parser.test.ts", () => {
   let server: ReturnType<ReturnType<typeof createApp>["listen"]>;
@@ -47,7 +29,9 @@ describe("test/body-parser.test.ts", () => {
         expect(ctx.request.rawBody).toEqual('{"foo":"bar"}');
         ctx.body = ctx.request.body;
       });
+
       server = app.listen();
+
       request(server)
         .post("/")
         .send({ foo: "bar" })
@@ -286,7 +270,6 @@ describe("test/body-parser.test.ts", () => {
         enableTypes: ["text"],
       });
       app.use(async (ctx) => {
-        console.log(ctx.request.body);
         expect(ctx.headers["content-type"]).toEqual("text/html");
         expect(ctx.request.body).toEqual("<h1>abc</h1>");
         expect(ctx.request.rawBody).toEqual("<h1>abc</h1>");
