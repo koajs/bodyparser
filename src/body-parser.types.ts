@@ -7,9 +7,17 @@ import type * as Koa from 'koa';
 export const supportedBodyTypes = ['json', 'form', 'text', 'xml'] as const;
 export type BodyType = (typeof supportedBodyTypes)[number];
 
+/**
+ * BodyParser Options
+ */
 export type BodyParserOptions = {
   /**
-   * Patch request body to Node's 'ctx.req'
+   * declares the HTTP methods where bodies will be parsed.
+   * @default ['POST', 'PUT', 'PATCH']
+   */
+  parsedMethods?: string[];
+  /**
+   * patch request body to Node's 'ctx.req'
    * @default false
    */
   patchNode?: boolean;

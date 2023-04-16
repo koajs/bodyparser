@@ -26,12 +26,13 @@ declare module 'http' {
  */
 export function bodyParserWrapper(opts: BodyParserOptions = {}) {
   const {
+    patchNode = false,
+    parsedMethods = ['POST', 'PUT', 'PATCH'],
     detectJSON,
     onError,
     enableTypes = ['json', 'form'],
     extendTypes = {} as NonNullable<BodyParserOptions['extendTypes']>,
     enableRawChecking = false,
-    patchNode = false,
     ...restOpts
   } = opts;
   const isEnabledBodyAs = getIsEnabledBodyAs(enableTypes);
@@ -69,8 +70,13 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
 
   return async function (ctx: Koa.Context, next: Koa.Next) {
     if (
+      // method souldn't be parsed
+      !parsedMethods.includes(ctx.method.toUpperCase()) ||
+      // patchNode enabled and raw request already parsed
       (patchNode && ctx.req.body !== undefined) ||
+      // koa request body already parsed
       ctx.request.body !== undefined ||
+      // bodyparser disabled
       ctx.disableBodyParser
     )
       return next();
