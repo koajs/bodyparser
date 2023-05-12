@@ -1,6 +1,5 @@
 import parser from 'co-body';
 import type * as Koa from 'koa';
-
 import type {BodyParserOptions, BodyType} from './body-parser.types';
 import {getIsEnabledBodyAs, getMimeTypes} from './body-parser.utils';
 
