@@ -67,7 +67,7 @@
     "lodash.merge": "^4.6.2"
   },
   "engines": {
-    "node": ">= 14"
+    "node": ">= 16"
   },
   "repository": {
     "type": "git",
