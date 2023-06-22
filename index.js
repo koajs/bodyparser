@@ -2,7 +2,7 @@
 
 const parse = require('co-body');
 const copy = require('copy-to');
-const { is } = require('type-is');
+const typeis = require('type-is');
 
 /**
  * @param [Object] opts
@@ -81,7 +81,8 @@ module.exports = function(opts) {
   async function parseBody(ctx) {
     if (
       enableJson &&
-      ((detectJSON && detectJSON(ctx)) || isTypes(ctx.request.get('content-type'), jsonTypes))
+      ((detectJSON && detectJSON(ctx)) ||
+        isTypes(ctx.request.get('content-type'), jsonTypes))
     ) {
       return await parse.json(ctx, jsonOpts); // eslint-disable-line no-return-await
     }
@@ -130,6 +131,6 @@ function isTypes(contentTypeValue, types) {
     // trim extra semicolon
     contentTypeValue = contentTypeValue.replace(/;$/, '');
   }
-  console.log(contentTypeValue);
-  return is(contentTypeValue, types);
+
+  return typeis.is(contentTypeValue, types);
 }
