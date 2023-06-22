@@ -1,21 +1,8 @@
-/** !
- * koa-body-parser - index.js
- * Copyright(c) 2014
- * MIT Licensed
- *
- * Authors:
- *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
- *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
- */
-
 'use strict';
-
-/**
- * Module dependencies.
- */
 
 const parse = require('co-body');
 const copy = require('copy-to');
+const typeis = require('type-is');
 
 /**
  * @param [Object] opts
@@ -94,7 +81,8 @@ module.exports = function(opts) {
   async function parseBody(ctx) {
     if (
       enableJson &&
-      ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))
+      ((detectJSON && detectJSON(ctx)) ||
+        isTypes(ctx.request.get('content-type'), jsonTypes))
     ) {
       return await parse.json(ctx, jsonOpts); // eslint-disable-line no-return-await
     }
@@ -136,4 +124,13 @@ function extendType(original, extend) {
 
 function checkEnable(types, type) {
   return types.includes(type);
+}
+
+function isTypes(contentTypeValue, types) {
+  if (typeof contentTypeValue === 'string') {
+    // trim extra semicolon
+    contentTypeValue = contentTypeValue.replace(/;$/, '');
+  }
+
+  return typeis.is(contentTypeValue, types);
 }

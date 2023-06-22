@@ -1,20 +1,3 @@
-/** !
- * koa-body-parser - test/middleware.test.js
- *
- * Copyright(c) 2014
- * MIT Licensed
- *
- * Authors:
- *   dead_horse <dead_horse@qq.com> (http://deadhorse.me)
- *   fengmk2 <m@fengmk2.com> (http://fengmk2.com)
- */
-
-'use strict';
-
-/**
- * Module dependencies.
- */
-
 const path = require('path');
 const request = require('supertest');
 const Koa = require('koa');
@@ -59,6 +42,21 @@ describe('test/middleware.test.js', function() {
         .set('Content-type', 'application/vnd.api+json')
         .send('{"foo": "bar"}')
         .expect({foo: 'bar'}, done);
+    });
+
+    it('should parse json body with `content-type: application/json;charset=utf-8;` headers ok', async () => {
+      app.use(bodyParser());
+
+      app.use(async ctx => {
+        ctx.request.body.should.eql({foo: 'bar'});
+        ctx.request.rawBody.should.equal('{"foo": "bar"}');
+        ctx.body = ctx.request.body;
+      });
+      await request(app.listen())
+        .post('/')
+        .set('Content-type', 'application/json;charset=utf-8;')
+        .send('{"foo": "bar"}')
+        .expect({foo: 'bar'});
     });
 
     it('should parse json patch', function(done) {
