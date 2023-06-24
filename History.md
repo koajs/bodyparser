@@ -1,4 +1,10 @@
 
+4.4.1 / 2023-06-22
+==================
+
+**fixes**
+  * [[`5a551b1`](http://github.com/koajs/bodyparser/commit/5a551b1de6f5e2200b8a838207b56ea1198bdb96)] - fix: compatible extra semicolon on content-type header (#153) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.4.0 / 2023-03-15
 ==================
 
