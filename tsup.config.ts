@@ -1,4 +1,4 @@
-import {defineConfig, build} from 'tsup';
+import {defineConfig} from 'tsup';
 
 const tsupConfig = defineConfig({
   name: '@koa/body-parser',

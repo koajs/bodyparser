@@ -1,4 +1,5 @@
 import deepMerge from 'lodash.merge';
+import typeis from 'type-is';
 import {
   type BodyParserOptions,
   supportedBodyTypes,
@@ -77,4 +78,19 @@ export function getMimeTypes(
   const mimeTypes = deepMerge(defaultMimeTypes, extendTypes);
 
   return mimeTypes;
+}
+
+/**
+ * Check if the incoming request contains the "Content-Type" header
+ * field, and it contains any of the give mime types. If there
+ * is no request body, null is returned. If there is no content type,
+ * false is returned. Otherwise, it returns the first type that matches.
+ */
+export function isTypes(contentTypeValue: string, types: string[]) {
+  if (typeof contentTypeValue === 'string') {
+    // trim extra semicolon
+    contentTypeValue = contentTypeValue.replace(/;$/, '');
+  }
+
+  return typeis.is(contentTypeValue, types);
 }

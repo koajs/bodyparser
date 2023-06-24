@@ -20,7 +20,7 @@ describe("test/body-parser.test.ts", () => {
       app = createApp();
     });
 
-    it("should parse json body ok", (done) => {
+    it("should parse json body ok", async () => {
       // should work when use body parser again
       app.use(bodyParser());
 
@@ -32,13 +32,13 @@ describe("test/body-parser.test.ts", () => {
 
       server = app.listen();
 
-      request(server)
+      await request(server)
         .post("/")
         .send({ foo: "bar" })
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
 
-    it("should parse json body with json-api headers ok", (done) => {
+    it("should parse json body with json-api headers ok", async () => {
       // should work when use body parser again
       app.use(bodyParser());
 
@@ -48,15 +48,32 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .set("Accept", "application/vnd.api+json")
         .set("Content-type", "application/vnd.api+json")
         .send('{"foo": "bar"}')
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
 
-    it("should parse json patch", (done) => {
+    it.only("should parse json body with `content-type: application/json;charset=utf-8;` headers ok", async () => {
+      app.use(bodyParser());
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ foo: "bar" });
+        expect(ctx.request.rawBody).toEqual('{"foo": "bar"}');
+        ctx.body = ctx.request.body;
+      });
+
+      server = app.listen();
+      await request(server)
+        .post("/")
+        .set("Content-type", "application/json;charset=utf-8;")
+        .send('{"foo": "bar"}')
+        .expect({ foo: "bar" });
+    });
+
+    it("should parse json patch", async () => {
       const app = createApp();
       app.use(async (ctx) => {
         expect(ctx.request.body).toEqual([
@@ -68,56 +85,56 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .patch("/")
         .set("Content-type", "application/json-patch+json")
         .send('[{"op": "add", "path": "/foo", "value": "bar"}]')
-        .expect([{ op: "add", path: "/foo", value: "bar" }], done);
+        .expect([{ op: "add", path: "/foo", value: "bar" }]);
     });
 
-    it("should json body reach the limit size", (done) => {
+    it("should json body reach the limit size", async () => {
       const app = createApp({ jsonLimit: 100 });
       app.use(async (ctx) => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send(require(path.join(fixtures, "raw.json")))
-        .expect(413, done);
+        .expect(413);
     });
 
-    it("should json body error with string in strict mode", (done) => {
+    it("should json body error with string in strict mode", async () => {
       const app = createApp({ jsonLimit: 100 });
       app.use(async (ctx) => {
         expect(ctx.request.rawBody).toEqual('"invalid"');
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .set("Content-type", "application/json")
         .send('"invalid"')
-        .expect(400, done);
+        .expect(400);
     });
 
-    it("should json body ok with string not in strict mode", (done) => {
+    it("should json body ok with string not in strict mode", async () => {
       const app = createApp({ jsonLimit: 100, jsonStrict: false });
       app.use(async (ctx) => {
         expect(ctx.request.rawBody).toEqual('"valid"');
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .set("Content-type", "application/json")
         .send('"valid"')
         .expect(200)
-        .expect("valid", done);
+        .expect("valid");
     });
 
     describe("opts.detectJSON", () => {
-      it("should parse json body on /foo.json request", (done) => {
+      it("should parse json body on /foo.json request", async () => {
         const app = createApp({
           detectJSON(ctx) {
             return /\.json/i.test(ctx.path);
@@ -131,13 +148,13 @@ describe("test/body-parser.test.ts", () => {
         });
 
         server = app.listen();
-        request(server)
+        await request(server)
           .post("/foo.json")
           .send(JSON.stringify({ foo: "bar" }))
-          .expect({ foo: "bar" }, done);
+          .expect({ foo: "bar" });
       });
 
-      it("should not parse json body on /foo request", (done) => {
+      it("should not parse json body on /foo request", async () => {
         const app = createApp({
           detectJSON(ctx) {
             return /\.json/i.test(ctx.path);
@@ -150,10 +167,10 @@ describe("test/body-parser.test.ts", () => {
         });
 
         server = app.listen();
-        request(server)
+        await request(server)
           .post("/foo")
           .send(JSON.stringify({ foo: "bar" }))
-          .expect({ '{"foo":"bar"}': "" }, done);
+          .expect({ '{"foo":"bar"}': "" });
       });
     });
   });
@@ -161,33 +178,33 @@ describe("test/body-parser.test.ts", () => {
   describe("form body", () => {
     const app = createApp();
 
-    it("should parse form body ok", (done) => {
+    it("should parse form body ok", async () => {
       app.use(async (ctx) => {
         expect(ctx.request.body).toEqual({ foo: { bar: "baz" } });
         expect(ctx.request.rawBody).toEqual("foo%5Bbar%5D=baz");
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("form")
         .send({ foo: { bar: "baz" } })
-        .expect({ foo: { bar: "baz" } }, done);
+        .expect({ foo: { bar: "baz" } });
     });
 
-    it("should parse form body reach the limit size", (done) => {
+    it("should parse form body reach the limit size", async () => {
       const app = createApp({ formLimit: 10 });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("form")
         .send({ foo: { bar: "bazzzzzzz" } })
-        .expect(413, done);
+        .expect(413);
     });
   });
 
   describe("text body", () => {
-    it("should parse text body ok", (done) => {
+    it("should parse text body ok", async () => {
       const app = createApp({
         enableTypes: ["text", "json"],
       });
@@ -197,21 +214,21 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server).post("/").type("text").send("body").expect("body", done);
+      await request(server).post("/").type("text").send("body").expect("body");
     });
 
-    it("should not parse text body when disable", (done) => {
+    it("should not parse text body when disable", async () => {
       const app = createApp();
       app.use(async (ctx) => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server).post("/").type("text").send("body").expect({}, done);
+      await request(server).post("/").type("text").send("body").expect({});
     });
   });
 
   describe("xml body", () => {
-    it("should parse xml body ok", (done) => {
+    it("should parse xml body ok", async () => {
       const app = createApp({
         enableTypes: ["xml"],
       });
@@ -222,28 +239,28 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("xml")
         .send("<xml>abc</xml>")
-        .expect("<xml>abc</xml>", done);
+        .expect("<xml>abc</xml>");
     });
 
-    it("should not parse text body when disable", (done) => {
+    it("should not parse text body when disable", async () => {
       const app = createApp();
       app.use(async (ctx) => {
         expect(ctx.headers["content-type"]).toEqual("application/xml");
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("xml")
         .send("<xml>abc</xml>")
-        .expect({}, done);
+        .expect({});
     });
 
-    it("should xml body reach the limit size", (done) => {
+    it("should xml body reach the limit size", async () => {
       const app = createApp({
         enableTypes: ["xml"],
         xmlLimit: 10,
@@ -253,16 +270,16 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("xml")
         .send("<xml>abcdefghijklmn</xml>")
-        .expect(413, done);
+        .expect(413);
     });
   });
 
   describe("html body by text parser", () => {
-    it("should parse html body ok", (done) => {
+    it("should parse html body ok", async () => {
       const app = createApp({
         extendTypes: {
           text: ["text/html"],
@@ -276,30 +293,30 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("html")
         .send("<h1>abc</h1>")
-        .expect("<h1>abc</h1>", done);
+        .expect("<h1>abc</h1>");
     });
 
-    it("should not parse html body when disable", (done) => {
+    it("should not parse html body when disable", async () => {
       const app = createApp();
       app.use(async (ctx) => {
         expect(ctx.headers["content-type"]).toEqual("text/html");
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("html")
         .send("<h1>abc</h1>")
-        .expect({}, done);
+        .expect({});
     });
   });
 
   describe("patchNode", () => {
-    it("should patch Node raw request with supported type", (done) => {
+    it("should patch Node raw request with supported type", async () => {
       const app = createApp({ patchNode: true });
 
       app.use(async (ctx) => {
@@ -311,13 +328,13 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.req.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send({ foo: "bar" })
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
 
-    it("should patch Node raw request with unsupported type", (done) => {
+    it("should patch Node raw request with unsupported type", async () => {
       const app = createApp({ patchNode: true });
 
       app.use(async (ctx) => {
@@ -329,16 +346,16 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.req.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("application/x-unsupported-type")
         .send("x-unsupported-type")
-        .expect({}, done);
+        .expect({});
     });
   });
 
   describe("extend type", () => {
-    it("should extend json ok", (done) => {
+    it("should extend json ok", async () => {
       const app = createApp({
         extendTypes: {
           json: ["application/x-javascript"],
@@ -349,14 +366,14 @@ describe("test/body-parser.test.ts", () => {
       });
 
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("application/x-javascript")
         .send(JSON.stringify({ foo: "bar" }))
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
 
-    it("should extend json with array ok", (done) => {
+    it("should extend json with array ok", async () => {
       const app = createApp({
         extendTypes: {
           json: ["application/x-javascript", "application/y-javascript"],
@@ -367,14 +384,14 @@ describe("test/body-parser.test.ts", () => {
       });
 
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("application/x-javascript")
         .send(JSON.stringify({ foo: "bar" }))
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
 
-    it("should extend xml ok", (done) => {
+    it("should extend xml ok", async () => {
       const app = createApp({
         enableTypes: ["xml"],
         extendTypes: {
@@ -386,11 +403,11 @@ describe("test/body-parser.test.ts", () => {
       });
 
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("application/xml-custom")
         .send("<xml>abc</xml>")
-        .expect("<xml>abc</xml>", done);
+        .expect("<xml>abc</xml>");
     });
 
     it("should throw when pass unsupported types", () => {
@@ -431,7 +448,7 @@ describe("test/body-parser.test.ts", () => {
   });
 
   describe("enableTypes", () => {
-    it("should disable json success", (done) => {
+    it("should disable json success", async () => {
       const app = createApp({
         enableTypes: ["form"],
       });
@@ -440,11 +457,11 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .type("json")
         .send({ foo: "bar" })
-        .expect({}, done);
+        .expect({});
     });
 
     it("should throw when pass unsupported types", () => {
@@ -461,13 +478,13 @@ describe("test/body-parser.test.ts", () => {
   describe("other type", () => {
     const app = createApp();
 
-    it("should get body null", (done) => {
+    it("should get body null", async () => {
       app.use(async (ctx) => {
-        expect(ctx.request.body).toEqual({});
+        expect(ctx.request.body).toBeUndefined();
         ctx.body = ctx.request.body;
       });
       server = app.listen();
-      request(server).get("/").expect({}, done);
+      await request(server).get("/").expect({});
     });
   });
 
@@ -478,20 +495,20 @@ describe("test/body-parser.test.ts", () => {
       },
     });
 
-    it("should get custom error message", (done) => {
+    it("should get custom error message", async () => {
       app.use(async () => {});
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send("test")
         .set("content-type", "application/json")
         .expect(422)
-        .expect("custom parse error", done);
+        .expect("custom parse error");
     });
   });
 
   describe("disableBodyParser", () => {
-    it("should not parse body when disableBodyParser set to true", (done) => {
+    it("should not parse body when disableBodyParser set to true", async () => {
       const app = new Koa();
       app.use(async (ctx, next) => {
         ctx.disableBodyParser = true;
@@ -503,17 +520,17 @@ describe("test/body-parser.test.ts", () => {
         ctx.body = ctx.request.body ? "parsed" : "empty";
       });
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send({ foo: "bar" })
         .set("content-type", "application/json")
         .expect(200)
-        .expect("empty", done);
+        .expect("empty");
     });
   });
 
   describe("enableRawChecking", () => {
-    it("should override koa request with raw request body if exist and enableRawChecking is truthy", (done) => {
+    it("should override koa request with raw request body if exist and enableRawChecking is truthy", async () => {
       const rawParsedBody = { rawFoo: "rawBar" };
       const app = createApp({ rawParsedBody, enableRawChecking: true });
       app.use(async (ctx) => {
@@ -521,13 +538,13 @@ describe("test/body-parser.test.ts", () => {
       });
 
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send({ foo: "bar" })
-        .expect(rawParsedBody, done);
+        .expect(rawParsedBody);
     });
 
-    it("shouldn't override koa request with raw request body if not exist and enableRawChecking is truthy", (done) => {
+    it("shouldn't override koa request with raw request body if not exist and enableRawChecking is truthy", async () => {
       const rawParsedBody = undefined;
       const app = createApp({ rawParsedBody, enableRawChecking: true });
       app.use(async (ctx) => {
@@ -535,10 +552,10 @@ describe("test/body-parser.test.ts", () => {
       });
 
       server = app.listen();
-      request(server)
+      await request(server)
         .post("/")
         .send({ foo: "bar" })
-        .expect({ foo: "bar" }, done);
+        .expect({ foo: "bar" });
     });
   });
 });

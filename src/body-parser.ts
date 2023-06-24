@@ -1,7 +1,7 @@
 import parser from 'co-body';
 import type * as Koa from 'koa';
 import type {BodyParserOptions, BodyType} from './body-parser.types';
-import {getIsEnabledBodyAs, getMimeTypes} from './body-parser.utils';
+import {getIsEnabledBodyAs, getMimeTypes, isTypes} from './body-parser.utils';
 
 /**
  * Global declaration for the added properties to the 'ctx.request'
@@ -42,8 +42,13 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
    * Handler to parse the request coming data
    */
   async function parseBody(ctx: Koa.Context) {
-    const shouldParseBodyAs = (type: BodyType) =>
-      Boolean(isEnabledBodyAs[type] && ctx.request.is(mimeTypes[type]));
+    const shouldParseBodyAs = (type: BodyType) => {
+      return Boolean(
+        isEnabledBodyAs[type] &&
+          isTypes(ctx.request.get('content-type'), mimeTypes[type]),
+      );
+    };
+
     const bodyType =
       detectJSON?.(ctx) || shouldParseBodyAs('json')
         ? 'json'
@@ -58,7 +63,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     const parserOptions = {
       // force co-body return raw body
       returnRawBody: true,
-      strict: shouldParseBodyAs('json') ? restOpts.jsonStrict : undefined,
+      strict: bodyType === 'json' ? restOpts.jsonStrict : undefined,
       [`${bodyType}Types`]: mimeTypes[bodyType],
       limit: restOpts[`${shouldParseBodyAs('xml') ? 'xml' : bodyType}Limit`],
     };
