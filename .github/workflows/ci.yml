@@ -1,0 +1,25 @@
+name: Continuous Integration
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 16
+          - 18
+          - 20
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+      - name: Install dependencies
+        run: yarn install
+      - name: Check linter
+        run: yarn lint
+      - name: Run tests
+        run: yarn test-ci

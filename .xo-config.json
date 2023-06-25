@@ -1,0 +1,22 @@
+{
+  "prettier": true,
+  "space": true,
+  "extends": [
+    "xo-lass"
+  ],
+  "rules": {
+    "node/no-deprecated-api": "off",
+    "no-unused-vars": "off",
+    "no-prototype-builtins": "off",
+    "prefer-rest-params": "off",
+    "n/prefer-global/process": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "unicorn/no-array-reduce": "off"
+  },
+  "ignores": [
+    "test/**",
+    "examples/**"
+  ]
+}
