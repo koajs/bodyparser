@@ -20,7 +20,8 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test": "jest --detectOpenHandles",
-    "test-ci": "npm run test -- --coverage"
+    "test-ci": "npm run test -- --coverage",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "koa",

@@ -1,4 +1,10 @@
 
+5.0.0 / 2023-06-25
+==================
+
+**features**
+  * [[`b89581a`](http://github.com/koajs/bodyparser/commit/b89581adc53257d8e4d949735402dc8e3c18a7e8)] - feat: Re-create the module with TypeScript (#152) (Imed Jaberi <<imed_jebari@hotmail.fr>>)
+
 4.4.1 / 2023-06-22
 ==================
 
