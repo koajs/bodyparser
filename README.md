@@ -6,7 +6,7 @@
 [![node version][node-image]][node-url]
 
 [npm-image]: https://img.shields.io/npm/v/@koa/bodyparser.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@koa/router
+[npm-url]: https://www.npmjs.com/package/@koa/bodyparser
 [github-action-image]: https://github.com/koajs/bodyparser/actions/workflows/ci.yml/badge.svg?style=flat-square
 [coveralls-image]: https://img.shields.io/coveralls/koajs/bodyparser.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/koajs/bodyparser?branch=master
