@@ -79,5 +79,8 @@
   "bugs": {
     "url": "https://github.com/koajs/body-parser/issues"
   },
-  "homepage": "https://github.com/koajs/body-parser"
+  "homepage": "https://github.com/koajs/body-parser",
+  "publishConfig": {
+    "access": "public"
+  }
 }
