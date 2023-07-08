@@ -24,14 +24,14 @@ Parse incoming request bodies in a middleware before your handlers, available un
 [![NPM](https://nodei.co/npm/@koa/bodyparser.png?downloads=true)](https://nodei.co/npm/@koa/bodyparser)
 
 ```bash
-$ npm i @koa/bodyparser
+$ npm i @koa/bodyparser --save
 ```
 
 ## Usage
 
 ```js
 const Koa = require("koa");
-const bodyParser = require("@koa/bodyparser");
+const { bodyParser } = require("@koa/bodyparser");
 
 const app = new Koa();
 app.use(bodyParser());
@@ -116,11 +116,25 @@ You can access raw request body by `ctx.request.rawBody` after `koa-bodyparser` 
 To use `koa-bodyparser` with koa@1.x.x, please use [bodyparser 2.x](https://github.com/koajs/bodyparser/tree/2.x).
 
 ```bash
-npm install koa-bodyparser@2 --save
+$ npm install koa-bodyparser@2 --save
 ```
 
-#### Licences
+usage
 
----
+```js
+const Koa = require("koa");
+const bodyParser = require("@koa/bodyparser");
+
+const app = new Koa();
+app.use(bodyParser());
+
+app.use((ctx) => {
+  // the parsed body will store in ctx.request.body
+  // if nothing was parsed, body will be an empty object {}
+  ctx.body = ctx.request.body;
+});
+```
+
+## Licences
 
 [MIT](LICENSE)
