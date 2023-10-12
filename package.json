@@ -1,6 +1,9 @@
 {
   "name": "koa-bodyparser",
   "version": "4.4.1",
+  "publishConfig": {
+    "tag": "latest-4"
+  },
   "description": "a body parser for Koa",
   "main": "index.js",
   "scripts": {
