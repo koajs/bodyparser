@@ -73,7 +73,8 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     >;
   }
 
-  return async function (ctx: Koa.Context, next: Koa.Next) {
+  // eslint-disable-next-line func-names
+  return async function bodyParser(ctx: Koa.Context, next: Koa.Next) {
     if (
       // method souldn't be parsed
       !parsedMethods.includes(ctx.method.toUpperCase()) ||
