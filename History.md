@@ -1,4 +1,15 @@
 
+5.1.0 / 2024-03-25
+==================
+
+**features**
+  * [[`9c18179`](http://github.com/koajs/bodyparser/commit/9c181798ef1467df9109ed54bbd4a612382a6490)] - feat: set name of middleware function to improve interop with monitoring tools (#159) (André Cruz <<andremiguelcruz@msn.com>>)
+
+**others**
+  * [[`664cd7c`](http://github.com/koajs/bodyparser/commit/664cd7c413250d5e12eb5bb0fbf4e52d31ef24f5)] - docs: fix usage for @koa/bodyparser v5 (#154) (狼叔 <<i5ting@126.com>>)
+  * [[`1eb0532`](http://github.com/koajs/bodyparser/commit/1eb053267c9e092ada6c316489e20596edd819f4)] - chore: typo npm-url (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`55783fc`](http://github.com/koajs/bodyparser/commit/55783fc0ce77c0235d74244efe4069e4f9ca5850)] - chore: add publishConfig access to public (fengmk2 <<fengmk2@gmail.com>>)
+
 5.0.0 / 2023-06-25
 ==================
 
