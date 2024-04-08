@@ -1,6 +1,6 @@
 {
   "name": "@koa/bodyparser",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Koa body parsing middleware",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -68,6 +68,9 @@
     "co-body": "^6.1.0",
     "lodash.merge": "^4.6.2",
     "type-is": "^1.6.18"
+  },
+  "peerDependencies": {
+    "koa": "^2.14.1"
   },
   "engines": {
     "node": ">= 16"

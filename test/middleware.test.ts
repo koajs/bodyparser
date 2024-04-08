@@ -56,7 +56,7 @@ describe("test/body-parser.test.ts", () => {
         .expect({ foo: "bar" });
     });
 
-    it.only("should parse json body with `content-type: application/json;charset=utf-8;` headers ok", async () => {
+    it("should parse json body with `content-type: application/json;charset=utf-8;` headers ok", async () => {
       app.use(bodyParser());
 
       app.use(async (ctx) => {
