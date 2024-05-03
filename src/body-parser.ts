@@ -95,6 +95,10 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
       return next();
     }
 
+    if (ctx.req.closed) {
+      return ctx.throw(499, 'Request already closed');
+    }
+
     try {
       const response = await parseBody(ctx);
       // patch node
