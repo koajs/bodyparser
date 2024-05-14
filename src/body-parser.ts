@@ -96,7 +96,9 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     }
 
     if (ctx.req.closed) {
-      return ctx.throw(499, 'Request already closed');
+      ctx.status = 499;
+      ctx.body = 'Request already closed';
+      return;
     }
 
     try {
