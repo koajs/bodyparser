@@ -558,4 +558,19 @@ describe("test/body-parser.test.ts", () => {
         .expect({ foo: "bar" });
     });
   });
+
+  describe("request closed", () => {
+    it("should return 499 on request closed", async () => {
+      const app = new Koa();
+
+      app.use(async (ctx, next) => {
+        Object.defineProperty(ctx.req, "closed", { value: true });
+        await next();
+      });
+      app.use(bodyParser());
+      server = app.listen();
+
+      await request(server).post("/").send({ foo: "bar" }).expect(499);
+    });
+  });
 });
