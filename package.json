@@ -10,7 +10,7 @@
     "lint": "xo",
     "lint:fix": "xo --fix",
     "test": "mocha --require should test/*.spec.js --exit",
-    "coverage": "nyc npm run test --reporter=lcov",
+    "coverage": "nyc npm run test && nyc report --reporter lcov --report-dir coverage",
     "ci": "npm run lint && npm run coverage"
   },
   "repository": {

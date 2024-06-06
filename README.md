@@ -1,20 +1,14 @@
 # [**koa-bodyparser**](https://github.com/koajs/bodyparser)
 
-
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Coveralls][coveralls-image]][coveralls-url]
-[![David deps][david-image]][david-url]
+[![Continuous Integration for 4.x](https://github.com/koajs/bodyparser/actions/workflows/nodejs.yml/badge.svg?branch=4.x)](https://github.com/koajs/bodyparser/actions/workflows/nodejs.yml)
+[![Test coverage][codecov-image]][codecov-url]
 [![node version][node-image]][node-url]
 
 [npm-image]: https://img.shields.io/npm/v/koa-bodyparser.svg?style=flat-square
 [npm-url]: https://npmjs.com/package/koa-bodyparser
-[travis-image]: https://img.shields.io/travis/koajs/bodyparser.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koajs/bodyparser
-[coveralls-image]: https://img.shields.io/coveralls/koajs/bodyparser.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/koajs/bodyparser?branch=master
-[david-image]: https://img.shields.io/david/koajs/bodyparser.svg?style=flat-square
-[david-url]: https://david-dm.org/koajs/bodyparser
+[codecov-image]: https://codecov.io/github/koajs/bodyparser/coverage.svg?branch=4.x
+[codecov-url]: https://codecov.io/github/koajs/bodyparser?branch=4.x
 [node-image]: https://img.shields.io/badge/node.js-%3E=_8-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 
