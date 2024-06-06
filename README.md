@@ -1,6 +1,7 @@
 # [**koa-bodyparser**](https://github.com/koajs/bodyparser)
 
 [![NPM version][npm-image]][npm-url]
+[![Continuous Integration for 4.x](https://github.com/koajs/bodyparser/actions/workflows/nodejs.yml/badge.svg?branch=4.x)](https://github.com/koajs/bodyparser/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
 [![node version][node-image]][node-url]
 

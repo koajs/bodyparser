@@ -11,4 +11,6 @@ jobs:
     name: Node.js
     uses: node-modules/github-actions/.github/workflows/node-test.yml@master
     with:
-      version: '8, 10, 12, 14, 16, 18, 20, 22'
+      version: '12, 14, 16, 18, 20, 22'
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
