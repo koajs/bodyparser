@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integration for 4.x
 
 on:
   push:
