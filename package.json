@@ -46,7 +46,6 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@types/co-body": "^6.1.0",
     "@types/jest": "^29.5.0",
     "@types/koa": "^2.13.6",
     "@types/lodash.merge": "^4.6.7",
@@ -65,6 +64,7 @@
     "xo": "^0.54.2"
   },
   "dependencies": {
+    "@types/co-body": "^6.1.0",
     "co-body": "^6.1.0",
     "lodash.merge": "^4.6.2",
     "type-is": "^1.6.18"
