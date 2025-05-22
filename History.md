@@ -1,3 +1,14 @@
+5.1.2 / 2025-05-22
+==================
+
+**fixes**
+  * [[`031348a`](https://github.com/koajs/bodyparser/commit/031348a2d469dd288dc21cd10d8de280d9936f2c)] - fix: add check for closed requests (#162) (zbrydon)
+
+5.1.1 / 2024-04-09
+==================
+
+**fixes**
+  * [[`f27be45`](https://github.com/koajs/bodyparser/commit/f27be45528d6885f08675ee1c650897e44d3dbfa)] - fix: Add koa as peerDeps and fix the encoding option propagation (#160) (3imed-jaberi)
 
 5.1.0 / 2024-03-25
 ==================
