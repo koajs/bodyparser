@@ -5,14 +5,16 @@
     "xo-lass"
   ],
   "rules": {
-    "node/no-deprecated-api": "off",
-    "no-unused-vars": "off",
-    "no-prototype-builtins": "off",
-    "prefer-rest-params": "off",
-    "n/prefer-global/process": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/prefer-reduce-type-parameter": "off",
+    "node/no-deprecated-api": "off",
+    "no-unused-vars": "off",
+    "no-prototype-builtins": "off",
+    "n/file-extension-in-import": "off",
+    "n/prefer-global/process": "off",
+    "prefer-rest-params": "off",
     "unicorn/no-array-reduce": "off"
   },
   "ignores": [
