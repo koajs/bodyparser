@@ -491,7 +491,7 @@ describe("test/body-parser.test.ts", () => {
   describe("onError", () => {
     const app = createApp({
       onError({}, ctx) {
-        ctx.throw("custom parse error", 422);
+        ctx.throw(422, "custom parse error");
       },
     });
 

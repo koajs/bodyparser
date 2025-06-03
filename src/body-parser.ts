@@ -49,14 +49,12 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
       );
     };
 
-    const bodyType =
-      detectJSON?.(ctx) || shouldParseBodyAs('json')
-        ? 'json'
-        : shouldParseBodyAs('form')
-        ? 'form'
-        : shouldParseBodyAs('text') || shouldParseBodyAs('xml')
-        ? 'text'
-        : null;
+    const bodyType = (() => {
+      if (detectJSON?.(ctx) || shouldParseBodyAs('json')) return 'json';
+      if (shouldParseBodyAs('form')) return 'form';
+      if (shouldParseBodyAs('text') || shouldParseBodyAs('xml')) return 'text';
+      return null;
+    })();
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     if (!bodyType) return {} as Record<string, string>;
