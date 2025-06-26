@@ -88,7 +88,6 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
       return next();
     // raw request parsed and contain 'body' values and it's enabled to override the koa request
     if (enableRawChecking && ctx.req.body !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ctx.request.body = ctx.req.body;
       return next();
     }
