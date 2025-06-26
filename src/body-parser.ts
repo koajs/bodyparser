@@ -9,7 +9,7 @@ import {getIsEnabledBodyAs, getMimeTypes, isTypes} from './body-parser.utils';
 declare module 'koa' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Request {
-    body?: any;
+    body?: unknown;
     rawBody: string;
   }
 }
@@ -17,7 +17,7 @@ declare module 'koa' {
 declare module 'http' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface IncomingMessage {
-    body?: any;
+    body?: unknown;
     rawBody: string;
   }
 }
