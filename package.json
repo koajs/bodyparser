@@ -79,9 +79,9 @@
     "url": "git://github.com/koajs/bodyparser.git"
   },
   "bugs": {
-    "url": "https://github.com/koajs/body-parser/issues"
+    "url": "https://github.com/koajs/bodyparser/issues"
   },
-  "homepage": "https://github.com/koajs/body-parser",
+  "homepage": "https://github.com/koajs/bodyparser",
   "publishConfig": {
     "access": "public"
   }
