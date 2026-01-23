@@ -9,7 +9,7 @@ import {getIsEnabledBodyAs, getMimeTypes, isTypes} from './body-parser.utils';
 declare module 'koa' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Request {
-    body?: any;
+    body?: unknown;
     rawBody: string;
   }
 }
@@ -17,7 +17,7 @@ declare module 'koa' {
 declare module 'http' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface IncomingMessage {
-    body?: any;
+    body?: unknown;
     rawBody: string;
   }
 }
@@ -88,7 +88,6 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
       return next();
     // raw request parsed and contain 'body' values and it's enabled to override the koa request
     if (enableRawChecking && ctx.req.body !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ctx.request.body = ctx.req.body;
       return next();
     }
