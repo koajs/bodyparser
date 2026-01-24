@@ -45,7 +45,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
     const shouldParseBodyAs = (type: BodyType) => {
       return Boolean(
         isEnabledBodyAs[type] &&
-          isTypes(ctx.request.get('content-type'), mimeTypes[type]),
+        isTypes(ctx.request.get('content-type'), mimeTypes[type]),
       );
     };
 
