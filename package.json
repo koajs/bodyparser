@@ -76,7 +76,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/koajs/bodyparser.git"
+    "url": "git+https://github.com/koajs/bodyparser.git"
   },
   "bugs": {
     "url": "https://github.com/koajs/bodyparser/issues"
