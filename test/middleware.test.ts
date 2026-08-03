@@ -565,4 +565,250 @@ describe('test/body-parser.test.ts', () => {
       await request(app.callback()).post('/').send({ foo: 'bar' }).expect(499);
     });
   });
+
+  describe('customReviver', () => {
+    it('should parse json body with custom reviver function', async () => {
+      const app = createApp({
+        customReviver: (_key, value) => {
+          // Convert all string values to uppercase
+          if (typeof value === 'string') {
+            return value.toUpperCase();
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ foo: 'BAR', nested: { baz: 'QUX' } });
+        expect(ctx.request.rawBody).toEqual('{"foo":"bar","nested":{"baz":"qux"}}');
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ foo: 'bar', nested: { baz: 'qux' } })
+        .expect({ foo: 'BAR', nested: { baz: 'QUX' } });
+    });
+
+    it('should parse json body with custom reviver that filters out certain keys', async () => {
+      const app = createApp({
+        customReviver: (key, value) => {
+          // Filter out keys that start with 'secret'
+          if (key && key.startsWith('secret')) {
+            return undefined; // This will remove the key
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ public: 'data', visible: 'info' });
+        expect(ctx.request.rawBody).toEqual('{"public":"data","secretKey":"hidden","visible":"info","secretPassword":"password"}');
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ public: 'data', secretKey: 'hidden', visible: 'info', secretPassword: 'password' })
+        .expect({ public: 'data', visible: 'info' });
+    });
+
+    it('should parse json body with custom reviver that transforms dates', async () => {
+      const app = createApp({
+        customReviver: (_key, value) => {
+          // Convert ISO date strings to Date objects
+          if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)) {
+            return new Date(value);
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        const body = ctx.request.body;
+        expect(body.name).toBe('test');
+        expect(body.createdAt).toBeInstanceOf(Date);
+        expect(body.createdAt.getFullYear()).toBe(2023);
+        expect(body.updatedAt).toBeInstanceOf(Date);
+        expect(body.updatedAt.getMonth()).toBe(11); // December (0-indexed)
+        ctx.body = {
+          name: body.name,
+          createdAt: body.createdAt.toISOString(),
+          updatedAt: body.updatedAt.toISOString(),
+        };
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({
+          name: 'test',
+          createdAt: '2023-01-15T10:30:00Z',
+          updatedAt: '2023-12-25T15:45:00Z',
+        })
+        .expect({
+          name: 'test',
+          createdAt: '2023-01-15T10:30:00.000Z',
+          updatedAt: '2023-12-25T15:45:00.000Z',
+        });
+    });
+
+    it('should parse json body with custom reviver that handles arrays', async () => {
+      const app = createApp({
+        customReviver: (_key, value) => {
+          // Double all numeric values
+          if (typeof value === 'number') {
+            return value * 2;
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ 
+          numbers: [2, 4, 6], 
+          mixed: [2, 'text', 6], 
+          nested: { value: 8 } 
+        });
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ numbers: [1, 2, 3], mixed: [1, 'text', 3], nested: { value: 4 } })
+        .expect({ numbers: [2, 4, 6], mixed: [2, 'text', 6], nested: { value: 8 } });
+    });
+
+    it('should work with custom reviver and strict mode', async () => {
+      const app = createApp({
+        jsonStrict: true,
+        customReviver: (_key, value) => {
+          // Add prefix to all string values
+          if (typeof value === 'string') {
+            return `PREFIX_${value}`;
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ message: 'PREFIX_hello world' });
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ message: 'hello world' })
+        .expect({ message: 'PREFIX_hello world' });
+    });
+
+    it('should work with custom reviver and non-strict mode', async () => {
+      const app = createApp({
+        jsonStrict: false,
+        customReviver: (_key, value) => {
+          // Convert strings to numbers if they look like numbers
+          if (typeof value === 'string' && !isNaN(Number(value))) {
+            return Number(value);
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ count: 42, text: 'hello' });
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ count: '42', text: 'hello' })
+        .expect({ count: 42, text: 'hello' });
+    });
+
+    it('should handle custom reviver with invalid json gracefully', async () => {
+      const app = createApp({
+        customReviver: (_key, value) => {
+          // This reviver should not be called for invalid JSON
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        ctx.body = 'error handled';
+      });
+
+      await request(app.callback())
+        .post('/')
+        .set('Content-type', 'application/json')
+        .send('invalid json {')
+        .expect(400);
+    });
+
+    it('should not affect form parsing when custom reviver is provided', async () => {
+      const app = createApp({
+        customReviver: (_key, value) => {
+          // This should not affect form parsing
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ foo: { bar: 'baz' } });
+        expect(ctx.request.rawBody).toEqual('foo%5Bbar%5D=baz');
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .type('form')
+        .send({ foo: { bar: 'baz' } })
+        .expect({ foo: { bar: 'baz' } });
+    });
+
+    it('should not affect text parsing when custom reviver is provided', async () => {
+      const app = createApp({
+        enableTypes: ['text', 'json'],
+        customReviver: (_key, value) => {
+          // This should not affect text parsing
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual('plain text');
+        expect(ctx.request.rawBody).toEqual('plain text');
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .type('text')
+        .send('plain text')
+        .expect('plain text');
+    });
+
+    it('should work with patchNode option', async () => {
+      const app = createApp({
+        patchNode: true,
+        customReviver: (_key, value) => {
+          if (typeof value === 'string') {
+            return value.toUpperCase();
+          }
+          return value;
+        },
+      });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ test: 'VALUE' });
+        expect(ctx.request.rawBody).toEqual('{"test":"value"}');
+        expect(ctx.req.body).toEqual({ test: 'VALUE' });
+        expect(ctx.req.rawBody).toEqual('{"test":"value"}');
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .send({ test: 'value' })
+        .expect({ test: 'VALUE' });
+    });
+  });
 });

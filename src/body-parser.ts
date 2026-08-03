@@ -66,6 +66,7 @@ export function bodyParserWrapper(opts: BodyParserOptions = {}) {
       limit: restOpts[`${shouldParseBodyAs('xml') ? 'xml' : bodyType}Limit`],
       // eslint-disable-next-line unicorn/text-encoding-identifier-case
       encoding: restOpts.encoding || 'utf-8',
+      reviver: restOpts.customReviver,
     };
 
     return parser[bodyType](ctx, parserOptions) as Promise<

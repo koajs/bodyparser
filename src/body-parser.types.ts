@@ -72,6 +72,11 @@ export type BodyParserOptions = {
    * @default '1mb'
    */
   xmlLimit?: CoBodyOptions['limit'];
+  /**
+   * custom reviver function to be passed to JSON.parse
+   * @default undefined
+   */
+  customReviver?: (this: any, key: string, value: any) => any;
 } & Pick<
   CoBodyOptions,
   /**

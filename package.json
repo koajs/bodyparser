@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@types/co-body": "^6.1.3",
-    "co-body": "^6.2.0",
+    "co-body": "github:reharik/co-body#allow_custom_reviver_function",
     "lodash.merge": "^4.6.2",
     "type-is": "^2.1.0"
   },
