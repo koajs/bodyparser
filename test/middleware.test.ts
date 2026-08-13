@@ -497,6 +497,19 @@ describe('test/body-parser.test.ts', () => {
         .send({ foo: 'bar' })
         .expect({ foo: 'bar' });
     });
+
+    it('should not parse body on QUERY request when parsedMethods omits it', async () => {
+      const app = createApp({ parsedMethods: ['POST', 'PUT', 'PATCH'] });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toBeUndefined();
+        ctx.body = ctx.request.body;
+      });
+
+      await new request.Test(app.callback(), 'QUERY', '/')
+        .send({ foo: 'bar' })
+        .expect({});
+    });
   });
 
   describe('onError', () => {
