@@ -483,6 +483,35 @@ describe('test/body-parser.test.ts', () => {
     });
   });
 
+  describe('parsedMethods', () => {
+    it('should parse json body on QUERY request', async () => {
+      const app = createApp();
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toEqual({ foo: 'bar' });
+        expect(ctx.request.rawBody).toEqual('{"foo":"bar"}');
+        ctx.body = ctx.request.body;
+      });
+
+      await new request.Test(app.callback(), 'QUERY', '/')
+        .send({ foo: 'bar' })
+        .expect({ foo: 'bar' });
+    });
+
+    it('should not parse body on QUERY request when parsedMethods omits it', async () => {
+      const app = createApp({ parsedMethods: ['POST', 'PUT', 'PATCH'] });
+
+      app.use(async (ctx) => {
+        expect(ctx.request.body).toBeUndefined();
+        ctx.body = ctx.request.body;
+      });
+
+      await new request.Test(app.callback(), 'QUERY', '/')
+        .send({ foo: 'bar' })
+        .expect({});
+    });
+  });
+
   describe('onError', () => {
     const app = createApp({
       onError({}, ctx) {

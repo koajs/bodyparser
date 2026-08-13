@@ -27,7 +27,7 @@ declare module 'http' {
 export function bodyParserWrapper(opts: BodyParserOptions = {}) {
   const {
     patchNode = false,
-    parsedMethods = ['POST', 'PUT', 'PATCH'],
+    parsedMethods = ['POST', 'PUT', 'PATCH', 'QUERY'],
     detectJSON,
     onError,
     enableTypes = ['json', 'form'],

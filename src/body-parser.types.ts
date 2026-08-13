@@ -13,7 +13,7 @@ export type BodyType = (typeof supportedBodyTypes)[number];
 export type BodyParserOptions = {
   /**
    * declares the HTTP methods where bodies will be parsed.
-   * @default ['POST', 'PUT', 'PATCH']
+   * @default ['POST', 'PUT', 'PATCH', 'QUERY']
    */
   parsedMethods?: string[];
   /**
