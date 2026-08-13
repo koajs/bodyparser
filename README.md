@@ -92,7 +92,7 @@ app.use((ctx) => {
 
 - **enableRawChecking**: support the already parsed body on the raw request by override and prioritize the parsed value over the sended payload. (default is `false`)
 
-- **parsedMethods**: declares the HTTP methods where bodies will be parsed, default `['POST', 'PUT', 'PATCH']`.
+- **parsedMethods**: declares the HTTP methods where bodies will be parsed, default `['POST', 'PUT', 'PATCH', 'QUERY']`.
 
 - **disableBodyParser**: you can dynamic disable body parser by set `ctx.disableBodyParser = true`.
 
