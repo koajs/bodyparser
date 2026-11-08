@@ -387,6 +387,23 @@ describe('test/body-parser.test.ts', () => {
         .expect({ foo: 'bar' });
     });
 
+    it('should still parse default json types when extending json', async () => {
+      const app = createApp({
+        extendTypes: {
+          json: ['application/x-javascript'],
+        },
+      });
+      app.use(async (ctx) => {
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .type('json')
+        .send({ foo: 'bar' })
+        .expect({ foo: 'bar' });
+    });
+
     it('should extend xml ok', async () => {
       const app = createApp({
         enableTypes: ['xml'],

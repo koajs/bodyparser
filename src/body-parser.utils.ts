@@ -1,4 +1,3 @@
-import deepMerge from 'lodash.merge';
 import typeis from 'type-is';
 import {
   type BodyParserOptions,
@@ -75,9 +74,11 @@ export function getMimeTypes(
     // default xml mime types
     xml: ['text/xml', 'application/xml'],
   };
-  const mimeTypes = deepMerge(defaultMimeTypes, extendTypes);
+  for (const extendedTypeKey of Object.keys(extendTypes) as BodyType[]) {
+    defaultMimeTypes[extendedTypeKey].push(...extendTypes[extendedTypeKey]!);
+  }
 
-  return mimeTypes;
+  return defaultMimeTypes;
 }
 
 /**
