@@ -459,6 +459,25 @@ describe('test/body-parser.test.ts', () => {
         .expect({});
     });
 
+    it('should leave rawBody undefined when the type is not enabled', async () => {
+      const app = createApp({
+        enableTypes: ['form'],
+      });
+
+      app.use(async (ctx) => {
+        // @ts-expect-error rawBody is not set when no parser handles the body
+        const rawBody: string = ctx.request.rawBody;
+        expect(rawBody).toBeUndefined();
+        ctx.body = ctx.request.body;
+      });
+
+      await request(app.callback())
+        .post('/')
+        .type('json')
+        .send({ foo: 'bar' })
+        .expect({});
+    });
+
     it('should throw when pass unsupported types', () => {
       try {
         createApp({

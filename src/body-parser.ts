@@ -10,7 +10,7 @@ declare module 'koa' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface Request {
     body?: unknown;
-    rawBody: string;
+    rawBody?: string;
   }
 }
 
@@ -18,7 +18,7 @@ declare module 'http' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface IncomingMessage {
     body?: unknown;
-    rawBody: string;
+    rawBody?: string;
   }
 }
 /**
